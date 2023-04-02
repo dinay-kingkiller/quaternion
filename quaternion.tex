@@ -25,6 +25,15 @@ I've been distracted by quaternions and quaternion rotation since I first starte
 
 
 \section{Quaternion Ring}
+% A division ring has:
+% Addition is associative
+% addition identity
+% Addition inverse
+% Addition commutivity
+% Multiplication that is associative
+% Multiplication is associative over addition
+% Has an identity element
+% Every nonzero element has a multiplicative inverse.
 
 \begin{definition}[Quaternion]
   Formally, a quaternion consists of four values $(q_0, q_1, q_2, q_3)$ along with two operations: Addition $+$ and multiplication $\otimes$.
@@ -71,6 +80,7 @@ I've been distracted by quaternions and quaternion rotation since I first starte
     \end{pmatrix}
   \end{equation}
 \end{definition}
+
 \begin{theorem}
   Quaternions form a commutative group with addition.
 \end{theorem}
@@ -138,10 +148,12 @@ I've been distracted by quaternions and quaternion rotation since I first starte
 \end{proof}
 
 \begin{theorem}
-  Quaternions form a group with the quaternion product.
+  The quaternion product is associative. The proof is left to the reader.
+\end{theorem}
+\begin{theorem}
+  The left and right identity of quaternion multiplication is the \emph{identity quaternion} $1=(1,0,0,0)$
 \end{theorem}
 \begin{proof}
-  The quaternion product is associative. The proof is left to the reader. The left and right \emph{identity quaternion} is $(1, 0, 0, 0)$:
   \begin{equation}
     \begin{pmatrix}
       1q_0 - 0q_1 - 0q_2 - 0q_3 \\
@@ -164,6 +176,9 @@ I've been distracted by quaternions and quaternion rotation since I first starte
   \end{equation}
 \end{proof}
 
+\begin{theorem}
+  Every quaternion, besides the zero quaternion, has an inverse. That inverse being $q^{-1} = q^*/\|q\|$
+\end{theorem}
 
 Please note, quaternion multiplication is not commutative (For most quaternions: $p\otimes q\neq q \otimes p$). Some other algebraic properties:
 Every scalar can be expressed as a quaternion $(s, 0, 0, 0)$ and every (3-)vector can be a quaternion $(0, v1, v2, v3)$. The 0-quaternion $(0, 0, 0, 0)$ is the additive identity and the 1-quaternion the multiplicative identity $(1, 0, 0, 0)$. The conjugate of a quaternion has inverted signs on the vector components: $q^*=(q0, q1, q2, q3)^*=(q0, -q1, -q2, -q3)$. The norm of a quaternion is the square root of the components, or the square of the quaternion multiplied by its conjugate (if we treat a purely scalar quaternion as a scalar).
@@ -173,17 +188,7 @@ Every scalar can be expressed as a quaternion $(s, 0, 0, 0)$ and every (3-)vecto
 \end{equation}
 Every quaternion has an inverse $q^{-1}$ such that $q\otimes q^{-1}=1=q^{-1}\otimes q$. The inverse is $q^{-1}=q^*/\|q\|$. A quaternion with norm equal to one is called a unit quaternion, or versor. The quaternions covered outside this appendix can be considered unit quaternions. The $\otimes$ will be usually omitted too. We've seen that quaternion algebra can be applied to scalars and vectors. Pure vector multiplication notation will remain $\mathbf{u}\cdot\mathbf{v}$ and $\mathbf{u}\times\mathbf{v}$ for clarification, despite these also being quaternion operations.
 
-
-% A division ring has:
-% Addition is associative
-% addition identity
-% Addition inverse
-% Addition commutivity
-% Multiplication that is associative
-% Multiplication is associative over addition
-% Has an identity element
-% Every nonzero element has a multiplicative inverse.
-
+\subsection{Quaternion Notation}
 % \section{Quaternion Space}
 
 % Vector space:
@@ -197,14 +202,26 @@ Every quaternion has an inverse $q^{-1}$ such that $q\otimes q^{-1}=1=q^{-1}\oti
 % Distributivity of addition over scaling
 
 \section{The Versor Subgroup}
-\begin{definition}[Versors]
-\end{definition}
-
-
 % Closure
 % Associativity
 % Identity
 % Inverse
+  
+\begin{definition}[Versors]
+  Quaternions with norm $\|q\|=1$ form a subgroup of the quaternion product.
+\end{definition}
+
+\begin{theorem}
+  The norm of the product of two quaternions is equal to the product of the norm of the two quaterions. So, if the two versors have norm equal to one, the norm of their product must be one. Which makes the resultant quaternion a versor.
+\end{theorem}
+
+\begin{theorem}
+  The identity quaternion $(1, 0, 0, 0)$ belongs to the versor subgroup.
+\end{theorem}
+
+\begin{theorem}
+  The inverse of every versor is a versor. As well, the inverse is equal to the conjugate.
+\end{theorem}
 
 
 \section{The Orthogonal Group}
@@ -236,7 +253,7 @@ The quaternion is related to angular velocity by the following formula
   \begin{equation}
     \mathbf{v} = \mathrm{q}\mathbf{u}\mathrm{q}^*
   \end{equation}
-
+\end{definition}
 
 Quaternion rotation from angular velocity
 \begin{equation}
@@ -253,7 +270,7 @@ Spherical interpolation?
   q_{k+1} = \exp\left(\frac{1}{2} \boldsymbol\omega\Delta t\right)q_k
 \end{equation}
 
-\end{definition}
+
 
 
 
