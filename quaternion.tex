@@ -18,7 +18,7 @@
 \title{Quaternion Rotation}
 
 \begin{abstract}
-  Quaternions generalize concepts like real scalars, complex numbers and (3-)vectors. Most of these applications have stopped being useful, but quaternions remain important as singularity free descriptions of rotation. There are many resources on the algebra and analysis of quaternions, but often they disagree with the definition, so the results cannot be compared. This paper hopes to formally define these variations, so that differences in other resources can be compared. We will brush over proofs of generic quaternion algebra: for example, all definitions of quaternions are division rings and vector spaces. All versors and rotations form groups. Instead we will focus on final results and applications.
+  Quaternions are almost magical with their ability to look like other concepts. They can be described by group/ring theory, or in terms of hyper-complex numbers, or in terms of vector spaces, and they can exist as all three of these at once. There are many resources on the algebra and analysis of quaternions, but often their definitions disagree, making it difficult to compare results. This paper hopes to formally define one type of quaternion operations and use those to derive final results. We will brush over proofs of generic quaternion algebra, and push through to applications ready for implementation in code.
 \end{abstract}
 
 \maketitle
@@ -34,31 +34,36 @@
 % Has an identity element
 % Every nonzero element has a multiplicative inverse.
 
+
+% setValue(m_floats[3] * q.x() + m_floats[0] * q.m_floats[3] + m_floats[1] * q.z() - m_floats[2] * q.y(),
+% m_floats[3] * q.y() + m_floats[1] * q.m_floats[3] + m_floats[2] * q.x() - m_floats[0] * q.z(),
+% _floats[3] * q.z() + m_floats[2] * q.m_floats[3] + m_floats[0] * q.y() - m_floats[1] * q.x(),
+% m_floats[3] * q.m_floats[3] - m_floats[0] * q.x() - m_floats[1] * q.y() - m_floats[2] * q.z());
+
 \begin{definition}[Quaternion]
-  Formally, a quaternion consists of four values $(q_0, q_1, q_2, q_3)\in\mathbb{R}^4$ along with two operations: Addition $+$ and multiplication $\otimes$.
-  Addition over the quaternions is defined by
+  The Quaternion ring $\mathbb{H}$ consist of tuples of four real values $(x, y, z, w)\in\mathbb{R}^4$ along with some operations: Addition is defined easily enough
   \begin{equation}
     \begin{pmatrix}
-      p_0 \\
-      p_1 \\
-      p_2 \\
-      p_3
-    \end{pmatrix} +
+      x_1 \\
+      y_1 \\
+      z_1 \\
+      w_1
+    \end{pmatrix} \oplus
     \begin{pmatrix}
-      q_0 \\
-      q_1 \\
-      q_2 \\
-      q_3
+      x_2 \\
+      y_2 \\
+      z_2 \\
+      w_2
     \end{pmatrix} =
     \begin{pmatrix}
-      p_0 + q_0 \\
-      p_1 + q_1 \\
-      p_2 + q_2 \\
-      p_3 + q_3
+      x_1 + x_2 \\
+      y_1 + y_2 \\
+      z_1 + z_2 \\
+      w_1 + w_2
     \end{pmatrix}
   \end{equation}
   Multiplication is more complex
-  \begin{equation}
+  \begin{equation} \label{eqn:multiplication}
     \begin{pmatrix}
       p_0 \\
       p_1 \\
@@ -77,11 +82,38 @@
       p_0q_2 - p_1q_3 + p_2q_0 + p_3q_1 \\
       p_0q_3 + p_1q_2 - p_2q_1 + p_3q_0
     \end{pmatrix}
-  \end{equation} \label{multiplication}
+  \end{equation}
+  Quaternions have a \emph{conjugation} operator $q\mapsto q^*$ like complex numbers
+  \begin{equation}
+    \begin{pmatrix}
+      x \\
+      y \\
+      z \\
+      w
+    \end{pmatrix} ^ * =
+    \begin{pmatrix}
+      -x \\
+      -y \\
+      -z \\
+      w
+    \end{pmatrix}
+  \end{equation}
+  And they have a \emph{norm} that behaves like the length.
+  \begin{equation}
+    \|q\| = x^2 + y^2 + z^2 + x^2
+  \end{equation}
+  This formulation coincides with the ROS \texttt{tf2} package implementation. A less formal re-creation of some of these definitions can be found in the next section.
 \end{definition}
 
+
+
+
 \begin{theorem}
-  Quaternions form a commutative group with addition.
+  Quaternions form a commutative group with addition, which means they 
+  \begin{itemize}
+    \item 
+  \end{itemize}
+  
 \end{theorem}
 \begin{proof}
   Quaternions exhibit associativity, since their members have associativity. They exhibit commutativity, since their members are commutative. The additive identity is the \emph{zero quaternion} $0=\left(0, 0, 0, 0\right)$. The additive inverse of quaternion $q$ is $-q=(-q0, -q1, -q2, -q3)$; subtraction is defined by the inverse $p-q = p+(-q)$.
