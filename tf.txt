@@ -1,0 +1,5 @@
+quaternion_from_euler(0, 0, 0) = [0, 0, 0, 1]
+euler_from_quaternion([1, 0, 0, 0]) = [pi, 0, 0]
+euler_from_quaternion([0, 1, 0, 0]) = [pi, 0, pi]
+euler_from_quaternion([0, 0, 1, 0]) = [0, 0, pi]
+euler_from_quaternion([0, 0, 0, 1]) = [0, 0, 0]
