@@ -1,4 +1,3 @@
-
 \documentclass{amsart}
 
 \newtheorem{theorem}{Theorem}[section]
@@ -19,7 +18,7 @@
 \title{Quaternion Rotation}
 
 \begin{abstract}
-Quaternions are almost magical with their ability to look like other concepts. They can be described by group/ring theory, or in terms of hyper-complex numbers, or in terms of vector spaces, and they can exist as all three of these at once. There are many resources on the algebra and analysis of quaternions, but often their definitions disagree, making it difficult to compare results. This paper hopes to formally define one type of quaternion operations and use those to derive final results. We will brush over proofs of generic quaternion algebra, and push through to applications ready for implementation in code.
+  Quaternions are almost magical with their ability to look like other concepts. They can be described by group/ring theory, or in terms of hyper-complex numbers, or in terms of vector spaces, and they can exist as all three of these at once. There are many resources on the algebra and analysis of quaternions, but often their definitions disagree, making it difficult to compare results. This paper hopes to formally define one type of quaternion operations and use those to derive final results. We will brush over proofs of generic quaternion algebra, and push through to applications ready for implementation in code.
 \end{abstract}
 
 \maketitle
@@ -34,10 +33,9 @@ Quaternions are almost magical with their ability to look like other concepts. T
 % Multiplication is associative over addition
 % Has an identity element
 % Every nonzero element has a multiplicative inverse.
-Quaternions, hopefully obvious from their name, are ordered 4-tuples $\mathrm{q}=(x, y, z, w)\in\mathbb{R}^4$. The set of quaternions $\mathbb{H}$ form a ring with two operations $\oplus$ and $\otimes$
 
-\begin{definition}[Quaternion Addition]
-  Addition on quaternions is defined easily enough
+\begin{definition}[Quaternion]
+  The Quaternion ring $\mathbb{H}$ consist of tuples of four real values $(x, y, z, w)\in\mathbb{R}^4$ along with some operations: Addition is defined easily enough
   \begin{equation}
     \begin{pmatrix}
       x_1 \\
@@ -58,9 +56,7 @@ Quaternions, hopefully obvious from their name, are ordered 4-tuples $\mathrm{q}
       w_1 + w_2
     \end{pmatrix}
   \end{equation}
-\end{definition}
-\begin{definition}[Quaternion Multiplication]
-  What makes quaternions special is how mulitplication is defined. Multiplication is more complex than addition
+  Multiplication is more complex
   \begin{equation} \label{eqn:multiplication}
     \begin{pmatrix}
       x_1 \\
@@ -85,34 +81,36 @@ Quaternions, hopefully obvious from their name, are ordered 4-tuples $\mathrm{q}
       w_1w_2 - x_1x_2 - y_1y_2 - z_1z_2
     \end{pmatrix}
   \end{equation}
-  This formulation of multiplication should coincide with the ROS package \texttt{tf2}. A less formal re-creation of some of these definitions can be found in the next section.
+  Quaternions have a \emph{conjugation} operator $q\mapsto q^*$ like complex numbers
+  \begin{equation}
+    \begin{pmatrix}
+      x \\
+      y \\
+      z \\
+      w
+    \end{pmatrix} ^ * =
+    \begin{pmatrix}
+      -x \\
+      -y \\
+      -z \\
+      w
+    \end{pmatrix}
+  \end{equation}
+  And they have a \emph{norm} that behaves like the length of the quaternion.
+  \begin{equation}
+    \|q\| = \sqrt{x^2 + y^2 + z^2 + x^2}
+  \end{equation}
+  This formulation should coincide with the ROS \texttt{tf2} package quaternion implementation. A less formal re-creation of some of these definitions can be found in the next section.
 \end{definition}
 
 \begin{theorem}
   Quaternions form a commutative group with addition, which means they have the following properties
   \begin{itemize}
-  \item Associativity: $\mathrm{q}_1\oplus(\mathrm{q}_2\oplus \mathrm{q}_3) = (\mathrm{q}_1\oplus \mathrm{q}_2) \oplus \mathrm{q}_3$
-  \item Commutativity: $\mathrm{q}_1\oplus \mathrm{q}_2 = \mathrm{q}_2 \oplus \mathrm{q}_1$
-  \item Identity: $\mathrm{q}\oplus 0=\mathrm{q}=0\oplus \mathrm{q}$ where $\mathbf{0}$ is the 0-quaternion $(0, 0, 0, 0)$
-  \item Inverse: $\mathrm{q}\oplus (-q)=\mathrm{q}\ominus \mathrm{q}=\mathbf{0}=(-\mathrm{q})\oplus \mathrm{q}$ where the inverse is defined $-\mathrm{q}=(-x, -y, -z, -w)$
-  \end{itemize}
-\end{theorem}
-
-\begin{theorem}
-  Unlike addition, quaternions for a \emph{non-commutative} group with multiplication, which gives them the following properties
-  \begin{itemize}
-  \item Associativity: $\mathrm{q}_1\otimes(\mathrm{q}_2\otimes \mathrm{q}_3) = (\mathrm{q}_1\otimes \mathrm{q}_2) \otimes \mathrm{q}_3$
-  \item Identity: $\mathrm{q}\otimes\mathbf{1}=\mathrm{q}=\mathbf{1}\otimes \mathrm{q}$ where $\mathbf{1}$ is the identity quaternion $(0, 0, 0, 1)$
-  \item Inverse: $\mathrm{q}\otimes \mathrm{q}^{-1}=\mathrm{q}/\mathrm{q}=\mathbf{1}=\mathrm{q}^{-1}\otimes \mathrm{q}$ where $\mathrm{q}^{-1}$ is the inverse of $\mathrm{q}$.
-  \end{itemize}
-\end{theorem}
-
-\begin{theorem}
-  Finally, with the combination of operations, quaternions form a ring, which adds distributive properties
-  \begin{itemize}
-  \item Left distributivity: $q_1 \otimes \left(q_2\oplus q_3\right) = \left(q_1\otimes q_2\right) \oplus \left(q_1\otimes q_3\right)$
-    \item Right distributivity: $\left(q_1 \oplus q_2\right) \otimes q_3 = \left(q_1\otimes q_3\right) \oplus \left(q_2 \otimes q_3\right)$
-  \end{itemize}
+  \item Associativity: $q_1\oplus(q_2\oplus q_3) = (q_1\oplus q_2) \oplus q_3$
+  \item Commutativity: $q_1\oplus q_2 = q_2 \oplus q_1$
+  \item Identity: $q+0=q=0+q$ where $0$ is the 0-quaternion $0=(0, 0, 0, 0)$
+  \item Inverse: $q+(-q)=q-q=0=(-q)+q$ where the inverse is defined $-q=(-x, -y, -z, -w)$
+  \end{itemize}  
 \end{theorem}
 
 \begin{definition}
@@ -153,9 +151,62 @@ Quaternions, hopefully obvious from their name, are ordered 4-tuples $\mathrm{q}
   \item $(\mathbb{H}, \oplus)$ forms a commutative group. Details above.
   \item Compatiblity: $s_1(s_2q) = (s_1s_2)q$
   \item Identity: $1q = q = q1$ where $1\in\mathbb{R}$
-  \item Distributivity over quaternion addition: $s(q_1\oplus q_2) = sq_1 \oplus sq_2$
-  \item Distributivity over scalar multiplication: $(s_1\oplus s_2) q = s_1q \oplus s_2 q$
+  \item Distributivity over quaternion addition: $s(q_1+q_2) = sq_1 + sq_2$
+  \item Distributivity over scalar multiplication: $(s_1+s_2) q = s_1q + s_2 q$
   \end{itemize}
+\end{theorem}
+
+
+
+
+\begin{theorem}
+  The left and right identity of quaternion multiplication is the \emph{identity quaternion} $\mathbf{1}=(1,0,0,0)$
+\end{theorem}
+\begin{proof}
+  \begin{equation}
+    \begin{pmatrix}
+      1q_0 - 0q_1 - 0q_2 - 0q_3 \\
+      1q_1 + 0q_0 + 0q_3 - 0q_2 \\
+      1q_2 - 0q_3 + 0q_0 + 0q_1 \\
+      1q_3 + 0q_2 - 0q_1 + 0q_0
+    \end{pmatrix} =
+    \begin{pmatrix}
+      q_0 \\
+      q_1 \\
+      q_2 \\
+      q_3
+    \end{pmatrix} =  
+    \begin{pmatrix}
+      1q_0 - 0q_1 - 0q_2 - 0q_3 \\
+      0q_0 + 1q_1 + 0q_2 - 0q_3 \\
+      0q_0 - 0q_1 + 1q_2 + 0q_3 \\
+      0q_0 + 0q_1 - 0q_2 + 0q_3
+    \end{pmatrix}
+  \end{equation}
+\end{proof}
+
+\begin{definition}
+  Quaternions form vector spaces: scaling quaternion $q$ by $s$ is defined in terms of quaternion multiplication $sq = (s,0,0,0)\otimes q$
+\end{definition}
+
+\begin{definition}
+  All quaternions have a conjugate $q^*=(q_0,-q_1,-q_2,-q_3)$. 
+\end{definition}
+
+\begin{theorem}
+  Conjugation is an involution $(q^*)^*=q$.
+\end{theorem}
+
+\begin{definition}
+  The norm is the square root of the sum of the squares $\|q\|=\sqrt{q\otimes q^*}=\sqrt{q_0^2+q_1^2+q_2^2+q_3^2}$.
+\end{definition}
+
+\begin{theorem}
+  $\|p\|\|q\|=\|pq\|$
+\end{theorem}
+
+\begin{theorem}
+  Every quaternion, besides the zero quaternion, has an inverse $q^{-1}=\frac{q^*}{\|q\|}$
 \end{theorem}
 
 \begin{theorem}[Quaternion Commutor]
@@ -163,28 +214,28 @@ Quaternions, hopefully obvious from their name, are ordered 4-tuples $\mathrm{q}
 \end{theorem}
 \begin{proof}
   Let $p$ and $q$ be any two quaternions, then their commutor would be
-  \begin{equation}
-    p\otimes q-q\otimes p =
-    %% \begin{pmatrix}
-    %%   p_0q_0 - p_1q_1 - p_2q_2 - p_3q_3 \\
-    %%   p_0q_1 + p_1q_0 + p_2q_3 - p_3q_2 \\
-    %%   p_0q_2 - p_1q_3 + p_2q_0 + p_3q_1 \\
-    %%   p_0q_3 + p_1q_2 - p_2q_1 + p_3q_0
-    %% \end{pmatrix} -
-    %% \begin{pmatrix}
-    %%   p_0q_0 - p_1q_1 - p_2q_2 - p_3q_3 \\
-    %%   p_1q_0 + p_0q_1 + p_3q_2 - p_2q_3 \\
-    %%   p_2q_0 - p_3q_1 + p_0q_2 + p_1q_3 \\
-    %%   p_3q_0 + p_2q_1 - p_1q_2 + p_0q_3
-    %% \end{pmatrix}\nonumber\\
-    %% =
+  \begin{eqnarray}
+    p\otimes q-q\otimes p &=&
+    \begin{pmatrix}
+      p_0q_0 - p_1q_1 - p_2q_2 - p_3q_3 \\
+      p_0q_1 + p_1q_0 + p_2q_3 - p_3q_2 \\
+      p_0q_2 - p_1q_3 + p_2q_0 + p_3q_1 \\
+      p_0q_3 + p_1q_2 - p_2q_1 + p_3q_0
+    \end{pmatrix} -
+    \begin{pmatrix}
+      p_0q_0 - p_1q_1 - p_2q_2 - p_3q_3 \\
+      p_1q_0 + p_0q_1 + p_3q_2 - p_2q_3 \\
+      p_2q_0 - p_3q_1 + p_0q_2 + p_1q_3 \\
+      p_3q_0 + p_2q_1 - p_1q_2 + p_0q_3
+    \end{pmatrix}\nonumber\\
+    &=&
     \begin{pmatrix}
       0 \\
       2p_2q_3-2p_3q_2\\
       2p_3q_1-2p_1q_3\\
       2p_1q_2-2p_2q_1
     \end{pmatrix}
-  \end{equation}
+  \end{eqnarray}
 \end{proof}
 
 \subsection{Quaternion Notation}
@@ -259,7 +310,7 @@ Before this, the notation has been overly explicit to avoid confusion. But the v
       0 \\
       0 \\
       1
-    \end{pmatrix}
+    \end{pmatrix},  
   \end{equation}
   Each quaternion can now be written out $q = q_1 \mathbf{1} + q_i \mathbf{i} + q_j \mathbf{j} + q_k \mathbf{k}$. The $\mathbf{1}$ is usually omitted, forcing in a definition for adding a scalar and a quaternion. This paper won't use this notation much, but it gives the best way to re-derive the multiplication defined back in equation \ref{multiplication}. From Hamilton's bridge, quaternion multiplication can be defined from the identities:
   \begin{equation}
