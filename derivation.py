@@ -49,12 +49,12 @@ class Quaternion:
 
 if __name__=="__main__":
     qx, qy, qz, qw = sympy.symbols("q.x, q.y, q.z, q.w")
-    v1, v2, v3 = sympy.symbols("v1, v2, v3")
+    vx, vy, vz = sympy.symbols("v1, v2, v3")
     q = Quaternion(qx, qy, qz, qw)
-    v = Quaternion(0, v1, v2, v3)
+    v = Quaternion(vx, vy, vz, 0)
     rotated = q*v*q.conj()
     for item in rotated:
-        print(sympy.collect(sympy.expand(sympy.simplify(item)), (v1, v2, v3)))
+        print(sympy.collect(sympy.expand(sympy.simplify(item)), (vx, vy, vz)))
     for i in range(10):
         q1t = random_quaternion()
         q2t = random_quaternion()

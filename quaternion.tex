@@ -19,23 +19,28 @@
 \title{Quaternion Rotation}
 
 \begin{abstract}
-Quaternions are almost magical with their ability to look like other concepts. They can be described by group/ring theory, or in terms of hyper-complex numbers, or in terms of vector spaces, and they can exist as all three of these at once. There are many resources on the algebra and analysis of quaternions, but often their definitions disagree, making it difficult to compare results. This paper hopes to formally define one type of quaternion operations and use those to derive final results. We will brush over proofs of generic quaternion algebra, and push through to applications ready for implementation in code.
+Quaternions are almost magical with their ability to look like other concepts. They can be described by group/ring theory, or in terms of hyper-complex numbers, or in terms of vector spaces, and they can exist as all three of these at once. There are many resources on the algebra and analysis of quaternions, but often their definitions disagree, making it difficult to compare results. This paper hopes to formally define one type of quaternion operations and use those to derive final results. We will brush over proofs of generic quaternion algebra, and push through to applications ready for implementation in code. The language in this paper is more formal than most treatments, but often that formalism is useful for defining your quaternion class in your programming language of choice.
 \end{abstract}
 
 \maketitle
 
 \section{The Quaternion Ring}
-% A division ring has:
-% Addition is associative
-% addition identity
-% Addition inverse
-% Addition commutivity
-% Multiplication that is associative
-% Multiplication is associative over addition
-% Has an identity element
-% Every nonzero element has a multiplicative inverse.
-Quaternions, hopefully obvious from their name, are ordered 4-tuples $\mathrm{q}=(x, y, z, w)\in\mathbb{R}^4$. The set of quaternions $\mathbb{H}$ form a ring with two operations $\oplus$ and $\otimes$
-
+%% A division ring has:
+%% Addition is associative
+%% addition identity
+%% Addition inverse
+%% Addition commutivity
+%% Multiplication that is associative
+%% Multiplication is associative over addition
+%% Has an identity element
+%% Every nonzero element has a multiplicative inverse.
+\begin{definition}[Quaternion]
+  Quaternions, hopefully obvious from their name, are ordered 4-tuples
+  \begin{equation}
+    \mathrm{q}=(x, y, z, w)\in\mathbb{H}\subset\mathbb{R}^4.
+  \end{equation}
+  The set of quaternions $\mathbb{H}$ form a division ring with two operations $\oplus$ and $\otimes$
+\end{definition}
 \begin{definition}[Quaternion Addition]
   Addition on quaternions is defined easily enough
   \begin{equation}
@@ -60,7 +65,7 @@ Quaternions, hopefully obvious from their name, are ordered 4-tuples $\mathrm{q}
   \end{equation}
 \end{definition}
 \begin{definition}[Quaternion Multiplication]
-  What makes quaternions special is how mulitplication is defined. Multiplication is more complex than addition
+  However, multiplication is more complex
   \begin{equation} \label{eqn:multiplication}
     \begin{pmatrix}
       x_1 \\
@@ -85,7 +90,7 @@ Quaternions, hopefully obvious from their name, are ordered 4-tuples $\mathrm{q}
       w_1w_2 - x_1x_2 - y_1y_2 - z_1z_2
     \end{pmatrix}
   \end{equation}
-  This formulation of multiplication should coincide with the ROS package \texttt{tf2}. A less formal re-creation of some of these definitions can be found in the next section.
+  But multiplication is what makes quaternions, quaternions. Other sources will often have a different definition of multiplication for quaternions that is incompatible with this one. All quaternion multiplication definitions should have similar properties, but when applying this to other topics, the definition of This formulation of multiplication was chosen to coincide with the ROS package \texttt{tf2}. A less formal re-creation of some of these definitions can be found in the next section.
 \end{definition}
 
 \begin{theorem}
@@ -93,8 +98,8 @@ Quaternions, hopefully obvious from their name, are ordered 4-tuples $\mathrm{q}
   \begin{itemize}
   \item Associativity: $\mathrm{q}_1\oplus(\mathrm{q}_2\oplus \mathrm{q}_3) = (\mathrm{q}_1\oplus \mathrm{q}_2) \oplus \mathrm{q}_3$
   \item Commutativity: $\mathrm{q}_1\oplus \mathrm{q}_2 = \mathrm{q}_2 \oplus \mathrm{q}_1$
-  \item Identity: $\mathrm{q}\oplus 0=\mathrm{q}=0\oplus \mathrm{q}$ where $\mathbf{0}$ is the 0-quaternion $(0, 0, 0, 0)$
-  \item Inverse: $\mathrm{q}\oplus (-q)=\mathrm{q}\ominus \mathrm{q}=\mathbf{0}=(-\mathrm{q})\oplus \mathrm{q}$ where the inverse is defined $-\mathrm{q}=(-x, -y, -z, -w)$
+  \item Identity: $\mathrm{q}\oplus \mathrm{e}_0=\mathrm{q}=\mathrm{e}_0\oplus \mathrm{q}$ where $\mathrm{e}_0$ is the 0-quaternion $(0, 0, 0, 0)$
+  \item Inverse: $\mathrm{q}\oplus (-q)=\mathrm{q}\ominus \mathrm{q}=\mathrm{e}_0=(-\mathrm{q})\oplus \mathrm{q}$ where the inverse is defined $-\mathrm{q}=(-x, -y, -z, -w)$
   \end{itemize}
 \end{theorem}
 
@@ -108,15 +113,17 @@ Quaternions, hopefully obvious from their name, are ordered 4-tuples $\mathrm{q}
 \end{theorem}
 
 \begin{theorem}
-  Finally, with the combination of operations, quaternions form a ring, which adds distributive properties
+  Finally, with the combination of operations, quaternions form a division ring, which adds distributive properties
   \begin{itemize}
   \item Left distributivity: $q_1 \otimes \left(q_2\oplus q_3\right) = \left(q_1\otimes q_2\right) \oplus \left(q_1\otimes q_3\right)$
     \item Right distributivity: $\left(q_1 \oplus q_2\right) \otimes q_3 = \left(q_1\otimes q_3\right) \oplus \left(q_2 \otimes q_3\right)$
   \end{itemize}
 \end{theorem}
 
-\begin{definition}
-  Before moving too far, defining the scalar multiplication operator will be useful. Multiplication between scalars and quaternions is defined in terms of quaternion multiplication. For a scalar $s\in\mathbb{R}$
+\section{Scalar Quaternions}
+This section is overly formal and could probably be left out, still...with our strict rules of quaternions, we will force the subject
+\begin{definition}[Quaternion Scalars]
+  Multiplication between scalars and quaternions is defined in terms of quaternion multiplication. For a scalar $s\in\mathbb{R}$
   \begin{equation}
     s
     \begin{pmatrix}
@@ -145,115 +152,85 @@ Quaternions, hopefully obvious from their name, are ordered 4-tuples $\mathrm{q}
       sw
     \end{pmatrix}
   \end{equation}
+  For good measure, lets define addition of a scalar $s\in\mathbb{R}$ and a quaternion $q\in\mathbb{H}$ similarily
+  \begin{equation}
+    s+
+    \begin{pmatrix}
+      x \\
+      y \\
+      z \\
+      w
+    \end{pmatrix} =
+    \begin{pmatrix}
+      0 \\
+      0 \\
+      0 \\
+      s \\
+    \end{pmatrix}
+    \oplus
+    \begin{pmatrix}
+      x \\
+      y \\
+      z \\
+      w
+    \end{pmatrix} = 
+    \begin{pmatrix}
+      x \\
+      y \\
+      z \\
+      s + w
+    \end{pmatrix}
+  \end{equation}
+  With those two definitions, scalars can be readily transformed back and forth between \emph{scalar quaternions}: quaternions of the form $(0, 0, 0, s)$. The algebraic properties of the real field $\left(\mathbb{R}, +, \times\right)$ and the quaternion ring $\mathbb{H}, \oplus, \otimes$ behave similiarly enough, that from here on, we will use the notation for the real field: $+$ and $\times$. 
 \end{definition}
+
+\section{The Quaternion Space}
+%% Vector space:
+%% Associativity of vector addition
+%% Commutativity of vector addition
+%% Vector addition identity
+%% Vector inverse identity
+%% Scaling Associativity a(bv) = (ab)v
+%% Scaling identity
+%% Distributivity of scalar over addition
+%% Distributivity of addition over scaling
 
 \begin{theorem}
   Quaternions form a vector space with the real field, which means they have the following properties 
   \begin{itemize}
   \item $(\mathbb{H}, \oplus)$ forms a commutative group. Details above.
   \item Compatiblity: $s_1(s_2q) = (s_1s_2)q$
-  \item Identity: $1q = q = q1$ where $1\in\mathbb{R}$
+  \item Identity: $1q = q$ where $1\in\mathbb{R}$
   \item Distributivity over quaternion addition: $s(q_1\oplus q_2) = sq_1 \oplus sq_2$
   \item Distributivity over scalar multiplication: $(s_1\oplus s_2) q = s_1q \oplus s_2 q$
   \end{itemize}
 \end{theorem}
 
-\begin{theorem}[Quaternion Commutor]
-  Quaternion multiplication is not commutative.
-\end{theorem}
-\begin{proof}
-  Let $p$ and $q$ be any two quaternions, then their commutor would be
-  \begin{equation}
-    p\otimes q-q\otimes p =
-    %% \begin{pmatrix}
-    %%   p_0q_0 - p_1q_1 - p_2q_2 - p_3q_3 \\
-    %%   p_0q_1 + p_1q_0 + p_2q_3 - p_3q_2 \\
-    %%   p_0q_2 - p_1q_3 + p_2q_0 + p_3q_1 \\
-    %%   p_0q_3 + p_1q_2 - p_2q_1 + p_3q_0
-    %% \end{pmatrix} -
-    %% \begin{pmatrix}
-    %%   p_0q_0 - p_1q_1 - p_2q_2 - p_3q_3 \\
-    %%   p_1q_0 + p_0q_1 + p_3q_2 - p_2q_3 \\
-    %%   p_2q_0 - p_3q_1 + p_0q_2 + p_1q_3 \\
-    %%   p_3q_0 + p_2q_1 - p_1q_2 + p_0q_3
-    %% \end{pmatrix}\nonumber\\
-    %% =
-    \begin{pmatrix}
-      0 \\
-      2p_2q_3-2p_3q_2\\
-      2p_3q_1-2p_1q_3\\
-      2p_1q_2-2p_2q_1
-    \end{pmatrix}
-  \end{equation}
-\end{proof}
-
-\subsection{Quaternion Notation}
-Before this, the notation has been overly explicit to avoid confusion. But the value of quaternions come from their familiar algebraic properties. The motivation for defining quaternions had originally come from these extra special properties
 \begin{definition}
-  Quaternions behave like vectors, with scalars attached. Every vector $\mathbf{v} = \left(v_1, v_2, v_3\right)$ can be written as a quaternion $v = \left(0, v_1, v_2, v_3\right)$. A quaternion can be described, in turn, as a scalar and a vector $q = \left(q_0, \mathbf{q}\right)$, where $\mathbf{q} = \left(q_1, q_2, q_3\right)$. A quaternion with no vector part is a \emph{scalar quaternion}, able to be treated exactly like a scalar (commutivity, square roots, etc.). A quaternion with no scalar part (but with a vector part) is a \emph{pure quaternion} with additional operations like dot and cross products. Between them, scalars, vectors, and quaternions all have a way to define addition and multiplication. Those quaternion operations can also be re-written in terms of scalar and vector parts:
+  In the quaternion vector space we can define four orthogonal unit bases:
   \begin{equation}
-    \begin{pmatrix}
-      p_0 \\
-      \mathbf{p}
-    \end{pmatrix}
-    +
-    \begin{pmatrix}
-      q_0 \\
-      \mathbf{q}
-    \end{pmatrix}
-    =
-    \begin{pmatrix}
-      p_0+q_0 \\
-      \mathbf{p} + \mathbf{q}
-    \end{pmatrix}
-  \end{equation}
-  and
-  \begin{equation}
-    \begin{pmatrix}
-      p_0 \\
-      \mathbf{p}
-    \end{pmatrix}
-    \otimes
-    \begin{pmatrix}
-      q_0 \\
-      \mathbf{q}
-    \end{pmatrix}
-    =
-    \begin{pmatrix}
-      p_0q_0 - \mathbf{p}\cdot \mathbf{q} \\
-      p_0\mathbf{q} + q_0\mathbf{p} + \mathbf{p}\times \mathbf{q}
-    \end{pmatrix}
-  \end{equation}
-  For pure quaternions, that final equation becomes
-  $\mathbf{p}\otimes\mathbf{q} = \left( -\mathbf{p}\cdot \mathbf{q}, \mathbf{p} \times \mathbf{q}\right)$.
-  The quaternion product $\otimes$ contains both the vector dot $\cdot$ and cross $\times$ products. For the rest of this paper, we will usually omit $\otimes$, but leave $\cdot$ and $\times$ for clarity.
-\end{definition}
-
-\begin{definition}
-  Quaternions can act like complex numbers, by definining four orthogonal unit bases:
-  \begin{equation}
-    \mathbf{1} =
+    \mathbf{i} =
     \begin{pmatrix}
       1 \\
       0 \\
       0 \\
       0
     \end{pmatrix},
-    \mathbf{i} =
-    \begin{pmatrix}
-      0 \\
-      1 \\
-      0 \\
-      0
-    \end{pmatrix}, 
     \mathbf{j} =
     \begin{pmatrix}
       0 \\
+      1 \\
+      0 \\
+      0
+    \end{pmatrix}, 
+    \mathbf{k} =
+    \begin{pmatrix}
+      0 \\
       0 \\
       1 \\
       0
     \end{pmatrix}, 
-    \mathbf{k} =
+    \mathbf{1} =
     \begin{pmatrix}
       0 \\
       0 \\
@@ -261,34 +238,95 @@ Before this, the notation has been overly explicit to avoid confusion. But the v
       1
     \end{pmatrix}
   \end{equation}
-  Each quaternion can now be written out $q = q_1 \mathbf{1} + q_i \mathbf{i} + q_j \mathbf{j} + q_k \mathbf{k}$. The $\mathbf{1}$ is usually omitted, forcing in a definition for adding a scalar and a quaternion. This paper won't use this notation much, but it gives the best way to re-derive the multiplication defined back in equation \ref{multiplication}. From Hamilton's bridge, quaternion multiplication can be defined from the identities:
-  \begin{equation}
-    \mathbf{i}^2 = \mathbf{j}^2 = \mathbf{k}^2 = \mathbf{ijk} = -1
-  \end{equation}
-  Please note, some papers do not use this definition and therefor have a different definition of quaternions. The math can all work out the same at the end, but be wary swapping between papers could mean a missed sign or swapped commutativity.
+  Each quaternion can now be written out $q = x \mathbf{i} + y \mathbf{j} + z \mathbf{z} + w$. The $\mathbf{1}$ is the unit quaternion and can be dropped after our previous formalizations of scalar/quaternion addition.
 \end{definition}
 
+\begin{theorem}
+  The definition of quaternion multiplication in equation \ref{eqn:multiplication} is unintuitive and hard to remember. Historically quaternions were used to extend complex numbers and as such, using the bases definition above, the complex $i^2=-1$ can be extended for quaternion hypercomplex numbers
+  \begin{equation}
+    \mathbf{ii} = \mathbf{jj} = \mathbf{kk} = \mathbf{ijk} = -\mathbf{1}
+  \end{equation}
+  Please note, some papers do not use this definition and therefor have a different definition of quaternions. The math can all work out the same at the end, but be wary swapping between papers could mean a missed sign or swapped commutativity.
+\end{theorem}
+
+\section{Vector Quaternions}
+In the previous section we said quaternions form a vector space, so technically every quaternion is a 4-vector. But in practice, quaternions are lovely because of how they work alongside 3-vectors.
+\begin{definition}[Vector Quaternion]
+  Quaternions behave like vectors with scalars attached. More formally, every quaternion can be described by a \emph{vector} or \emph{pure quaternion} $\mathbf{v}=\left(x, y, z, 0\right)$ plus a scalar quaternion $s=\left(0,0,0,s\right)$: either $s+\mathbf{v}$ or, like below, $(\mathbf{v}, s)$. Addition is then just:
+  \begin{equation}
+    \begin{pmatrix}
+      \mathbf{v}_1 \\
+      s_1
+    \end{pmatrix}
+    +
+    \begin{pmatrix}
+      \mathbf{v}_2 \\
+      s_2
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+      p_0+q_0 \\
+      \mathbf{p} + \mathbf{q}
+    \end{pmatrix}
+  \end{equation}
+  and multiplication can be defined from the vector dot and cross product
+  \begin{equation}
+    \begin{pmatrix}
+      \mathbf{v}_1 \\
+      s_1
+    \end{pmatrix}
+    \otimes
+    \begin{pmatrix}
+      \mathbf{v}_2 \\
+      s_2
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+      s_1\mathbf{v}_2 + s_2\mathbf{v}_1 + \mathbf{v}_1\times \mathbf{v}_2 \\
+      s_1s_2 - \mathbf{v}_1\cdot \mathbf{v}_2
+    \end{pmatrix}
+  \end{equation}
+  For pure quaternions, that final equation becomes
+  \begin{equation}
+    \mathbf{v}_1\otimes\mathbf{v}_2 =
+    \begin{pmatrix}
+      -\mathbf{v}_1\cdot \mathbf{v}_2\\
+      \mathbf{v}_1 \times \mathbf{v}_2
+    \end{pmatrix}
+  \end{equation}
+  The scalar part is minus the dot product of the two vectors and the vector part is the cross product--another way to re-derive equation \ref{eqn:multiplication} from a more readable/memorable place.\end{definition}
+
+\begin{theorem}[Quaternion Commutor]
+  Quaternion multiplication is not commutative.
+\end{theorem}
+\begin{proof}
+  Let $q_1$ and $q_2$ be any two quaternions. In terms of vectors, their commutor would be
+  \begin{equation}
+    q_1\otimes q_2-q_2\otimes q_1
+    =
+    \begin{pmatrix}
+      v_1 \times v_2 - v_2 \times v_1 \\
+      -v_1\cdot v_2 +v_2\cdot v_1
+    \end{pmatrix}
+  \end{equation}
+  The vector dot product is commutative $v_1\cdot v_2 = v_2\cdot v_1$, but the vector cross product is \emph{anti-}commutative $v_1\times v_2 = -v_2 \times v_1$. Thus
+  \begin{equation}
+    q_1\otimes q_2-q_2\otimes q_1 =
+    \begin{pmatrix}
+      2v_1\times v_2
+    \end{pmatrix}
+  \end{equation}
+  If we allow $q_1\cdot q_2$ and $q_1\times q_2$ be the dot and cross product on their \emph{vector} component, respectively, then the commuter is simply: $2q_1\times q_2$
+\end{proof}
 
 
-
-% \section{Quaternion Space}
-
-% Vector space:
-% Associativity of vector addition
-% Commutativity of vector addition
-% Vector addition identity
-% Vector inverse identity
-% Scaling Associativity a(bv) = (ab)v
-% Scaling identity
-% Distributivity of scalar over addition
-% Distributivity of addition over scaling
-
-\section{The Versor Subgroup}
+\section{Rotation Group}
 % Closure
 % Associativity
 % Identity
 % Inverse
-  
+
+
 \begin{definition}[Versors]
   Quaternions with norm $\|q\|=1$ form a subgroup of the quaternion product.
 \end{definition}
@@ -304,14 +342,6 @@ Before this, the notation has been overly explicit to avoid confusion. But the v
 \begin{theorem}
   The inverse of every versor is a versor. As well, the inverse is equal to the conjugate.
 \end{theorem}
-
-
-\section{The Orthogonal Group}
-% Closure
-% Associative
-% Identity
-% Inverse
-% SO(3) equivalence
 
 \begin{definition}
   Quaternions can be used to describe rotations in space. A versor rotates between reference frames ${^\mathrm{A}q^\mathrm{B}}:\mathrm{A}\to\mathrm{B}$. Without describing $\mathbf{v}\in\mathbb{R}^3$ in either $\mathrm{A}$ or $\mathrm{B}$ basis:
@@ -344,6 +374,14 @@ Before this, the notation has been overly explicit to avoid confusion. But the v
   we see that the inverse of the rotation is just its conjugate. When there is just one rotation, the rotation will be denoted as $q$ and its inverse $q^*$.
 \end{theorem}
 
+\section{Quaternion Transforms}
+% Closure
+% Associative
+% Identity
+% Inverse
+% SO(3) equivalence
+
+
 
 \begin{theorem}[Quaternion to Matrix]
   Every rotation $\mathrm{A}\to\mathrm{B}$ can be described as both a quaternion and a rotation matrix
@@ -365,28 +403,23 @@ Before this, the notation has been overly explicit to avoid confusion. But the v
   \begin{eqnarray}
     R \mathbf{v} &=&
     \begin{pmatrix}
-      q_0 \\
-      q_1 \\
-      q_2 \\
-      q_3
+      x \\
+      y \\
+      z \\
+      w
     \end{pmatrix} \otimes
+    \mathbf{v} \otimes
     \begin{pmatrix}
-      0 \\
-      v_1 \\
-      v_2 \\
-      v_3 
-    \end{pmatrix} \otimes
-    \begin{pmatrix}
-      q_0 \\
-      -q_1 \\
-      -q_2 \\
-      -q_3
+      -x \\
+      -y \\
+      -z \\
+      w
     \end{pmatrix} \nonumber \\
     R &=&
     \begin{pmatrix}
-      q_0^2+q_1^2-q_2^2-q_3^2 & -2q_0q_3+2q_1q_2 & 2q_0q_2 + 2q_1q_3 \\
-      2q_0q_3+2q_1q_2 & q_0^2-q_1^2+q_2^2-q_3^2 &  -2q_0q_1 + 2q_2q_3 \\
-      -2q_0q_2+2q_1q_3 & 2q_0q_1+2q_2q_3 & q_0^2-q_1^2-q_2^2+q_3^2
+      x^2-y^2-z^2+w^2 & 2xy-2zw & 2xz+2yw \\
+      2xy+2zw & -x^2+y^2-z^2+w^2 & -2xw+2yz \\
+      2xz-2wy & 2xw+2yz & -x^2-y^2+z^2+w^2
     \end{pmatrix}
   \end{eqnarray} 
 \end{proof}
