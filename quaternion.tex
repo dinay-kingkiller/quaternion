@@ -1,4 +1,3 @@
-
 \documentclass{amsart}
 
 \newtheorem{theorem}{Theorem}[section]
@@ -19,7 +18,7 @@
 \title{Quaternion Rotation}
 
 \begin{abstract}
-Quaternions are almost magical with their ability to look like other concepts. They can be described by group/ring theory, or in terms of hyper-complex numbers, or in terms of vector spaces, and they can exist as all three of these at once. There are many resources on the algebra and analysis of quaternions, but often their definitions disagree, making it difficult to compare results. This paper hopes to formally define one type of quaternion operations and use those to derive final results. We will brush over proofs of generic quaternion algebra, and push through to applications ready for implementation in code. The language in this paper is more formal than most treatments, but often that formalism is useful for defining your quaternion class in your programming language of choice.
+Quaternions are almost magical with their ability to look like other concepts. They can be described by group/ring theory, or in terms of hyper-complex numbers, or in terms of vector spaces, and they can exist as all three of these at once. There are many resources on the algebra and analysis of quaternions, but often their definitions disagree, making it difficult to compare results. This paper hopes to formally define one type of quaternion operations and use those to derive final results. We will brush over proofs of generic quaternion algebra, and push through to applications ready for implementation in code. The language in this paper is more formal than other treatments, but often formal thinking is useful for defining your quaternion class in the programming language of choice.
 \end{abstract}
 
 \maketitle
@@ -108,17 +107,45 @@ Quaternions are almost magical with their ability to look like other concepts. T
   \begin{itemize}
   \item Associativity: $\mathrm{q}_1\otimes(\mathrm{q}_2\otimes \mathrm{q}_3) = (\mathrm{q}_1\otimes \mathrm{q}_2) \otimes \mathrm{q}_3$
   \item Identity: $\mathrm{q}\otimes\mathbf{1}=\mathrm{q}=\mathbf{1}\otimes \mathrm{q}$ where $\mathbf{1}$ is the identity quaternion $(0, 0, 0, 1)$
-  \item Inverse: $\mathrm{q}\otimes \mathrm{q}^{-1}=\mathrm{q}/\mathrm{q}=\mathbf{1}=\mathrm{q}^{-1}\otimes \mathrm{q}$ where $\mathrm{q}^{-1}$ is the inverse of $\mathrm{q}$.
+  \item Inverse: $\mathrm{q}\otimes \mathrm{q}^{-1}=\mathrm{q}/\mathrm{q}=\mathbf{1}=\mathrm{q}^{-1}\otimes \mathrm{q}$ unless $q$ is the zero quaternion.
   \end{itemize}
 \end{theorem}
 
 \begin{theorem}
-  Finally, with the combination of operations, quaternions form a division ring, which adds distributive properties
+  With the combination of operations, quaternions form a division ring, which adds distributive properties
   \begin{itemize}
-  \item Left distributivity: $q_1 \otimes \left(q_2\oplus q_3\right) = \left(q_1\otimes q_2\right) \oplus \left(q_1\otimes q_3\right)$
-    \item Right distributivity: $\left(q_1 \oplus q_2\right) \otimes q_3 = \left(q_1\otimes q_3\right) \oplus \left(q_2 \otimes q_3\right)$
+  \item Left distributivity: $\mathrm{q}_1 \otimes \left(\mathrm{q}_2\oplus \mathrm{q}_3\right) = \left(\mathrm{q}_1\otimes \mathrm{q}_2\right) \oplus \left(\mathrm{q}_1\otimes \mathrm{q}_3\right)$
+    \item Right distributivity: $\left(\mathrm{q}_1 \oplus \mathrm{q}_2\right) \otimes \mathrm{q}_3 = \left(\mathrm{q}_1\otimes \mathrm{q}_3\right) \oplus \left(\mathrm{q}_2 \otimes \mathrm{q}_3\right)$
   \end{itemize}
 \end{theorem}
+
+\begin{definition}
+	\begin{equation}
+		\mathrm{q}^* = 
+		\begin{pmatrix}
+			x \\
+			y \\
+			z \\
+			w
+		\end{pmatrix}^* =
+		\begin{pmatrix}
+			-x \\
+			-y \\
+			-z \\
+			w
+		\end{pmatrix}
+	\end{equation}
+\end{definition}
+
+
+\begin{theorem}
+	As a convolution algebra, quaternions have the following properties
+	\begin{itemize}
+	\item Conjugate Involution: $(\mathrm{q}^*)^*=\mathrm{q}$
+	\item $\|\mathrm{q}_1\otimes \mathrm{q}_2\| = \|\mathrm{q}_1\|\|\mathrm{q}_2\|$
+	\end{itemize}
+\end{theorem}
+
 
 \section{Scalar Quaternions}
 This section is overly formal and could probably be left out, still...with our strict rules of quaternions, we will force the subject
@@ -199,10 +226,10 @@ This section is overly formal and could probably be left out, still...with our s
   Quaternions form a vector space with the real field, which means they have the following properties 
   \begin{itemize}
   \item $(\mathbb{H}, \oplus)$ forms a commutative group. Details above.
-  \item Compatiblity: $s_1(s_2q) = (s_1s_2)q$
-  \item Identity: $1q = q$ where $1\in\mathbb{R}$
-  \item Distributivity over quaternion addition: $s(q_1\oplus q_2) = sq_1 \oplus sq_2$
-  \item Distributivity over scalar multiplication: $(s_1\oplus s_2) q = s_1q \oplus s_2 q$
+  \item Compatibility: $s_1(s_2q) = (s_1s_2)q$
+  \item Scalar Identity: $1q = q$ where $1\in\mathbb{R}$
+  \item Distributivity over quaternion addition: $s(q_1+ q_2) = sq_1 + sq_2$
+  \item Distributivity over scalar multiplication: $(s_1+ s_2) q = s_1q + s_2 q$
   \end{itemize}
 \end{theorem}
 
@@ -238,7 +265,7 @@ This section is overly formal and could probably be left out, still...with our s
       1
     \end{pmatrix}
   \end{equation}
-  Each quaternion can now be written out $q = x \mathbf{i} + y \mathbf{j} + z \mathbf{z} + w$. The $\mathbf{1}$ is the unit quaternion and can be dropped after our previous formalizations of scalar/quaternion addition.
+  Each quaternion can now be written out $q = x \mathbf{i} + y \mathbf{j} + z \mathbf{z} + w$. The $\mathbf{1}$ is the unit quaternion and can be dropped after our previous formalizations of scalar/quaternion addition. Since we previously defined the addition of a scalar with a quaternion the $\mathbf{1}$ can also be dropped, i.e. $w+\mathrm{q} = w\mathbf{1} +\mathrm{q}$ for all scalars $w\in\mathbb{R}$
 \end{definition}
 
 \begin{theorem}
@@ -326,10 +353,14 @@ In the previous section we said quaternions form a vector space, so technically 
 % Identity
 % Inverse
 
-
-\begin{definition}[Versors]
+\begin{theorem}
   Quaternions with norm $\|q\|=1$ form a subgroup of the quaternion product.
-\end{definition}
+	\begin{itemize}
+		\item Closure: If $\|\mathrm{q}_1\|=1$ and $\|\mathrm{q}_2\|=1$ then $\|\mathrm{q}_1\mathrm{q}_2\|$
+		\item Identity: The identity quaternion is a versor $\|\mathbf{1}\|=1$
+		\item Inverse: If 
+	\end{itemize}
+\end{theorem}
 
 \begin{theorem}
   The norm of the product of two quaternions is equal to the product of the norm of the two quaterions. So, if the two versors have norm equal to one, the norm of their product must be one. Which makes the resultant quaternion a versor.
@@ -369,7 +400,7 @@ In the previous section we said quaternions form a vector space, so technically 
 \begin{theorem}
   By pre- and post-multiplying quaternion conjugates to invert the rotation
   \begin{equation}
-    \left({^Aq^{B*}}\right)\left({^B\mathbf{v}}\right)\left({^Aq^B}\right)={^A\mathbf{v}}
+    {\mathrm{q}_{A2B}^*}\left({^B\mathbf{v}}\right)\left(\mathrm{q}_{A2B}\right)={^A\mathbf{v}}
   \end{equation}
   we see that the inverse of the rotation is just its conjugate. When there is just one rotation, the rotation will be denoted as $q$ and its inverse $q^*$.
 \end{theorem}
