@@ -324,7 +324,10 @@ In the previous section we said quaternions form a vector space, so technically 
   The scalar part is minus the dot product of the two vectors and the vector part is the cross product--another way to re-derive equation \ref{eqn:multiplication} from a more readable/memorable place.\end{definition}
 
 \begin{theorem}[Quaternion Commutor]
-  Quaternion multiplication is not commutative.
+  Quaternion multiplication is not commutative. Its commutor is given by
+  \begin{equation}
+    \mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 = 2 \mathrm{q}_1 \times \mathrm{q}_2
+  \end{equation}
 \end{theorem}
 \begin{proof}
   Let $q_1$ and $q_2$ be any two quaternions. In terms of vectors, their commutor would be
@@ -354,132 +357,133 @@ In the previous section we said quaternions form a vector space, so technically 
 % Inverse
 
 \begin{theorem}
-  Quaternions with norm $\|q\|=1$ form a subgroup of the quaternion product.
+  Quaternions with norm $\|\mathrm{q}\|=1$ form a subgroup with the quaternion product.
 	\begin{itemize}
-		\item Closure: If $\|\mathrm{q}_1\|=1$ and $\|\mathrm{q}_2\|=1$ then $\|\mathrm{q}_1\mathrm{q}_2\|$
-		\item Identity: The identity quaternion is a versor $\|\mathbf{1}\|=1$
-		\item Inverse: If 
+	\item Closure: If $\|\mathrm{q}_1\|=1$ and $\|\mathrm{q}_2\|=1$ then $\|\mathrm{q}_1\mathrm{q}_2\|=1$
+	\item Identity: The identity quaternion is a versor $\|\mathbf{1}\|=1$
+	\item Inverse: The inverse of a versor is its conjugate $\mathrm{q}\mathrm{q}^*=1=\mathrm{q}^*\mathrm{q}$
 	\end{itemize}
 \end{theorem}
 
-\begin{theorem}
-  The norm of the product of two quaternions is equal to the product of the norm of the two quaterions. So, if the two versors have norm equal to one, the norm of their product must be one. Which makes the resultant quaternion a versor.
-\end{theorem}
-
-\begin{theorem}
-  The identity quaternion $(1, 0, 0, 0)$ belongs to the versor subgroup.
-\end{theorem}
-
-\begin{theorem}
-  The inverse of every versor is a versor. As well, the inverse is equal to the conjugate.
-\end{theorem}
 
 \begin{definition}
-  Quaternions can be used to describe rotations in space. A versor rotates between reference frames ${^\mathrm{A}q^\mathrm{B}}:\mathrm{A}\to\mathrm{B}$. Without describing $\mathbf{v}\in\mathbb{R}^3$ in either $\mathrm{A}$ or $\mathrm{B}$ basis:
+  Quaternions can be used to describe rotations in space. A versor rotates between reference frames $R:A\to B$. Without describing $\mathbf{v}\in\mathbb{R}^3$ in either $A$ or $B$ basis:
   \begin{equation}
     \begin{pmatrix}
-      \mathbf{v} \cdot \hat{\mathbf{b}}_x \\
-      \mathbf{v} \cdot \hat{\mathbf{b}}_y \\
-      \mathbf{v} \cdot \hat{\mathbf{b}}_z
-    \end{pmatrix} = {^\mathrm{B}q^\mathrm{A}} \otimes 
+      \mathbf{v} \cdot \mathbf{\hat{b}}_x \\
+      \mathbf{v} \cdot \mathbf{\hat{b}}_y \\
+      \mathbf{v} \cdot \mathbf{\hat{b}}_z
+    \end{pmatrix}
+    = \mathrm{q}_{A2B} \otimes
     \begin{pmatrix}
-      \mathbf{v} \cdot \hat{\mathbf{a}}_x \\
-      \mathbf{v} \cdot \hat{\mathbf{a}}_y \\
-      \mathbf{v} \cdot \hat{\mathbf{a}}_z
-    \end{pmatrix} \otimes {^\mathrm{B}q^{*\mathrm{A}}}
+      \mathbf{v} \cdot \mathbf{\hat{a}}_x \\
+      \mathbf{v} \cdot \mathbf{\hat{a}}_y \\
+      \mathbf{v} \cdot \mathbf{\hat{a}}_z
+    \end{pmatrix}
+    \otimes \mathrm{q}_{A2B}^*
   \end{equation}
 \end{definition}
 
 \begin{theorem}
-  The \emph{unit quaternion} $\mathbf{1}$ is the rotation identity
-  \begin{equation}
-   \mathbf{1} \mathbf{v} \mathbf{1}^* = \mathbf{v}  
-  \end{equation} 
+  These transformations also form a group: the orthogonal group. If $R(\mathrm{q}, \mathbf{v})=\mathrm{q}\mathbf{v}\mathrm{q}^*$
+  \begin{itemize}
+  \item Orthogonality: For all rotations $\|\mathbf{v}\|=\|R(\mathrm{q}, \mathbf{v})\|$
+  \item Cover: For all vectors where $\|\mathbf{u}\|=\|\mathbf{v}\|$ there is a rotation $\mathbf{u}=R(\mathrm{q}, \mathbf{v})$
+  \item Double Cover: Rotations are not unique $R(\mathrm{q},\mathbf{v})=R(-\mathrm{q},\mathbf{v})$
+  \item Closure: $R(\mathrm{q}_1, R(\mathrm{q}_2, \mathbf{v})) = R(\mathrm{q}_1\mathrm{q}_2, \mathbf{v})$
+  \item Identity: The identity quaternion forms the identity rotation $\mathbf{v} = R(\mathbf{1}, \mathbf{v})$
+  \item Inverse: $R(\mathrm{q}, R(\mathrm{q}^*, \mathbf{v})) = R(\mathbf{1}, \mathbf{v})$
+  \end{itemize}
 \end{theorem}
-
-\begin{theorem}
-  By pre- and post-multiplying quaternion conjugates to invert the rotation
-  \begin{equation}
-    {\mathrm{q}_{A2B}^*}\left({^B\mathbf{v}}\right)\left(\mathrm{q}_{A2B}\right)={^A\mathbf{v}}
-  \end{equation}
-  we see that the inverse of the rotation is just its conjugate. When there is just one rotation, the rotation will be denoted as $q$ and its inverse $q^*$.
-\end{theorem}
-
-\section{Quaternion Transforms}
-% Closure
-% Associative
-% Identity
-% Inverse
-% SO(3) equivalence
-
 
 
 \begin{theorem}[Quaternion to Matrix]
   Every rotation $\mathrm{A}\to\mathrm{B}$ can be described as both a quaternion and a rotation matrix
   \begin{equation}
-    \left({^\mathrm{B}q^\mathrm{A}}\right) \otimes {^\mathrm{A}\mathbf{v}} \otimes \left({^\mathrm{A}q^\mathrm{B}}\right) = \left({^\mathrm{B}R^\mathrm{A}}\right){^A\mathrm{A}\mathbf{v}}
+    \left({q_{A2B}}\right) \otimes {^\mathrm{A}\mathbf{v}} \otimes \left({q^*_{A2B}}\right) = \left({R_{A2B}}\right){^A\mathbf{v}}
   \end{equation}
   that rotation matrix also collects the dot products of the rotation.
   
   \begin{tabular}{c|ccc}
-    ${^BR^A}$ & $\hat{\mathbf{a}}_x$ & $\hat{\mathbf{a}}_y$ & $\hat{\mathbf{a}}_z$ \\
+    $R_{A2B}$ & $\hat{\mathbf{a}}_x$ & $\hat{\mathbf{a}}_y$ & $\hat{\mathbf{a}}_z$ \\
     \hline
-    $\hat{\mathbf{b}}_x$ & $q_0^2+q_1^2-q_2^2-q_3^2$ & $-2q_0q_3+2q_1q_2$ & $2q_0q_2 + 2q_1q_3$ \\
-    $\hat{\mathbf{b}}_y$ & $2q_0q_3+2q_1q_2$ & $q_0^2-q_1^2+q_2^2-q_3^2$ &  $-2q_0q_1 + 2q_2q_3$ \\
-    $\hat{\mathbf{b}}_z$ & $-2q_0q_2+2q_1q_3$ & $2q_0q_1+2q_2q_3$ & $q_0^2-q_1^2-q_2^2+q_3^2$
+    $\hat{\mathbf{b}}_x$ & $x^2-y^2-z^2+w^2$ & $2xy-2zw$ & $2xz+2yw$ \\
+    $\hat{\mathbf{b}}_y$ & $2xy+2zw$ & $-x^2+y^2-z^2+w^2$ & $-2xw+2yz$ \\
+    $\hat{\mathbf{b}}_z$ & $2xz-2wy$ & $2xw+2yz$ & $-x^2-y^2+z^2+w^2$
   \end{tabular}\centering
 \end{theorem}
 \begin{proof}
-  $R$ can be formed from algebra. The notation used implies that a pure quaternion is equal to its vector part.
-  \begin{eqnarray}
-    R \mathbf{v} &=&
+  $R$ can be formed from algebra.
+  \begin{equation}
+    R
+    \begin{pmatrix}
+      v_x \\
+      v_y \\
+      v_z \\
+      0
+    \end{pmatrix}
+    =
     \begin{pmatrix}
       x \\
       y \\
       z \\
       w
     \end{pmatrix} \otimes
-    \mathbf{v} \otimes
+    \begin{pmatrix}
+      v_x \\
+      v_y \\
+      v_z \\
+      0
+    \end{pmatrix}
+    \otimes
     \begin{pmatrix}
       -x \\
       -y \\
       -z \\
       w
-    \end{pmatrix} \nonumber \\
-    R &=&
-    \begin{pmatrix}
-      x^2-y^2-z^2+w^2 & 2xy-2zw & 2xz+2yw \\
-      2xy+2zw & -x^2+y^2-z^2+w^2 & -2xw+2yz \\
-      2xz-2wy & 2xw+2yz & -x^2-y^2+z^2+w^2
     \end{pmatrix}
-  \end{eqnarray} 
+  \end{equation}
 \end{proof}
 
-\section{Smooth Transforms}
 \begin{theorem}
-  The quaternion is related to angular velocity by the following formula
+  For a constant angular velocity, the time derivative 
   \begin{equation}
     \dot{q} = \frac{1}{2} q \otimes \boldsymbol\omega
   \end{equation}
 \end{theorem}
 \begin{proof}
-  Start with the equation from 2-point theory, which says, for a vector $\mathbf{v}$, described in $\mathrm{A}$ (as ${^A\mathbf{v}}$) and in $\mathrm{B}$ (as ${^B\mathbf{v}}$):
+  Let $\boldsymbol\omega$ be the angular velocity from frame $A$ to $B$. Let $^A\mathbf{v}$ and $^B\mathbf{v}$ be any vector described in basis $A$ and $B$ respectively, then
   \begin{equation}
-    \frac{d}{dt} {^\mathrm{B}\mathbf{v}} = \frac{d}{dt} {^\mathrm{A}\mathbf{v}} + {^\mathrm{B}\boldsymbol\omega^\mathrm{A}} \times {^\mathrm{A}\mathbf{v}}
+    \frac{d}{dt} {\mathbf{v}_B} = \frac{d}{dt} {\mathbf{v}_A} + \boldsymbol\omega_{A2B} \times {\mathbf{v}_A}
   \end{equation}
-  Strategically substituting our rotation quaternion
+  Affix the vector in $B$ perpendicular to the angular velocity such that $\mathbf{v}\cdot \boldsymbol\omega=0$. Since the dot product is zero, the cross product is equal to the quaternion product. Along with $\mathbf{v}$ being affixed in $B$ gives  
   \begin{equation}
-    \frac{d}{dt} \left[\left({^\mathrm{B}q^\mathrm{A}}\right)\left({^A\mathbf{v}}\right)\left({^\mathrm{A}q^\mathrm{B}}\right) \right]  = \frac{d}{dt} {^\mathrm{A}\mathbf{v}} + {^\mathrm{B}\boldsymbol\omega^\mathrm{A}}\times {^\mathrm{A}\mathbf{v}}
+    \frac{d}{dt} {\mathbf{v}_B} = \boldsymbol\omega_{A2B} \times {\mathbf{v}_A}
   \end{equation}
-  After this, we'll drop the $A$/$B$ bases for clarity. Choose a vector $\mathbf{v}$ in $\mathrm{A}$ where $\mathbf{v}$ is fixed, then:
+  And
   \begin{equation}
-    \dot{q}\mathbf{v}q^*+q\mathbf{v}\dot{q}^* = \boldsymbol\omega\times \mathbf{v}
+    \frac{d}{dt} {\mathbf{v}_B}
+    = \mathrm{\dot{q}_{A2B}}\otimes\mathbf{v}_A\otimes\mathrm{q}_{A2B}^* + \mathrm{q}_{A2B}\otimes\mathbf{v}\otimes \mathrm{\dot{q}}_{A2B}^*
   \end{equation}
-  Manipulating the left hand side with identities
-  \begin{eqnarray}
-    q^*\dot{q}\mathbf{v}q^*\dot{q}+q^*q\mathbf{v}\dot{q}^*\dot{q} &=& q^*\left(\boldsymbol\omega\times\mathbf{v}\right)\dot{q}\nonumber \\
-    q^*\dot{q}\mathbf{v}q^*\dot{q}+\mathbf{v} &=& q^*\left(\boldsymbol\omega\times\mathbf{v}\right)\dot{q}\nonumber \\
-  \end{eqnarray}
+  After removing references to $\mathbf{v}_B$ we can clean up those two equations giving
+  \begin{equation}
+    \mathrm{\dot{q}}\mathbf{v}\mathrm{q}^* +\mathrm{q}\mathbf{v}\mathrm{\dot{q}}^* = \boldsymbol\omega\mathbf{v}
+  \end{equation}
+  Since the conjugate is the inverse of the quaternion
+  \begin{equation}
+    \mathrm{q}^*\mathrm{q} =1
+  \end{equation}
+  Taking the time derivative gives
+  \begin{equation}
+    \mathrm{\dot{q}}^*\mathrm{q} + \mathrm{q}^*\mathrm{\dot{q}} = 0
+  \end{equation}
+  With some manipulation the equation relating to the angular velocity becomes
+  \begin{equation}
+    %% \mathrm{q}^*\mathrm{\dot{q}}\mathbf{v}+\mathbf{v} \mathrm{\dot{q}}^*\mathrm{q} = \mathrm{q}^*\boldsymbol\omega \mathbf{v}\mathrm{q} \\
+    \mathrm{q}^*\mathrm{\dot{q}}\mathbf{v}-\mathbf{v} \mathrm{\dot{q}}^*\mathrm{q} = \mathrm{q}^*\boldsymbol\omega \mathbf{v}\mathrm{q} \\
+  \end{equation}
+  
+  
 \end{proof}
 
 Linear interpolation
@@ -489,7 +493,7 @@ Linear interpolation
 
 Spherical interpolation?
 \begin{equation}
-  q_{k+1} = \exp\left(\frac{1}{2} \boldsymbol\omega\Delta t\right)q_k
+  \mathrm{q}_{k+1} = \exp\left(\frac{1}{2} \boldsymbol\omega\Delta t\right)q_k
 \end{equation}
 
 
