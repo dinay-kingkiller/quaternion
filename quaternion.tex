@@ -8,6 +8,7 @@
 \newtheorem{example}[theorem]{Example}
 \newtheorem{xca}[theorem]{Exercise}
 
+
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
 
@@ -142,6 +143,8 @@ Quaternions are almost magical with their ability to look like other concepts. T
 	As a convolution algebra, quaternions have the following properties
 	\begin{itemize}
 	\item Conjugate Involution: $(\mathrm{q}^*)^*=\mathrm{q}$
+	\item Conjugate Addition: $(\mathrm{q}_1\oplus\mathrm{q}_2)^*=\mathrm{q}_1^*\oplus\mathrm{q}_2^*$
+	\item Conjugate Multiplication: $(\mathrm{q}_1\otimes\mathrm{q}_2)^*=\mathrm{q}_2^*\otimes\mathrm{q}_1^*$
 	\item $\|\mathrm{q}_1\otimes \mathrm{q}_2\| = \|\mathrm{q}_1\|\|\mathrm{q}_2\|$
 	\end{itemize}
 \end{theorem}
@@ -265,7 +268,7 @@ This section is overly formal and could probably be left out, still...with our s
       1
     \end{pmatrix}
   \end{equation}
-  Each quaternion can now be written out $q = x \mathbf{i} + y \mathbf{j} + z \mathbf{z} + w$. The $\mathbf{1}$ is the unit quaternion and can be dropped after our previous formalizations of scalar/quaternion addition. Since we previously defined the addition of a scalar with a quaternion the $\mathbf{1}$ can also be dropped, i.e. $w+\mathrm{q} = w\mathbf{1} +\mathrm{q}$ for all scalars $w\in\mathbb{R}$
+  Each quaternion can now be written out $q = x \mathbf{i} + y \mathbf{j} + z \mathbf{z} + w \mathbf{1}$. The $\mathbf{1}$ is the unit quaternion and can be dropped after our previous formalizations of scalar/quaternion addition. Since we previously defined the addition of a scalar with a quaternion the $\mathbf{1}$ can also be dropped, i.e. $w+\mathrm{q} = w\mathbf{1} +\mathrm{q}$ for all scalars $w\in\mathbb{R}$
 \end{definition}
 
 \begin{theorem}
@@ -279,21 +282,21 @@ This section is overly formal and could probably be left out, still...with our s
 \section{Vector Quaternions}
 In the previous section we said quaternions form a vector space, so technically every quaternion is a 4-vector. But in practice, quaternions are lovely because of how they work alongside 3-vectors.
 \begin{definition}[Vector Quaternion]
-  Quaternions behave like vectors with scalars attached. More formally, every quaternion can be described by a \emph{vector} or \emph{pure quaternion} $\mathbf{v}=\left(x, y, z, 0\right)$ plus a scalar quaternion $s=\left(0,0,0,s\right)$: either $s+\mathbf{v}$ or, like below, $(\mathbf{v}, s)$. Addition is then just:
+  Quaternions behave like vectors with scalars attached. More formally, every quaternion can be described by a \emph{vector} or \emph{pure quaternion} $\mathbf{v}=\left(x, y, z, 0\right)$ plus a scalar quaternion $s=\left(0,0,0,s\right)$: either $\mathbf{v}+s$ or, like below, $(\mathbf{v}, s)$. Then addition can be defined as
   \begin{equation}
     \begin{pmatrix}
       \mathbf{v}_1 \\
       s_1
     \end{pmatrix}
-    +
+    \oplus
     \begin{pmatrix}
       \mathbf{v}_2 \\
       s_2
     \end{pmatrix}
     =
     \begin{pmatrix}
-      p_0+q_0 \\
-      \mathbf{p} + \mathbf{q}
+      \mathbf{p} + \mathbf{q}\\
+			p_0 + q_0
     \end{pmatrix}
   \end{equation}
   and multiplication can be defined from the vector dot and cross product
@@ -313,7 +316,7 @@ In the previous section we said quaternions form a vector space, so technically 
       s_1s_2 - \mathbf{v}_1\cdot \mathbf{v}_2
     \end{pmatrix}
   \end{equation}
-  For pure quaternions, that final equation becomes
+  For pure quaternions (aka vectors), that multiplication becomes
   \begin{equation}
     \mathbf{v}_1\otimes\mathbf{v}_2 =
     \begin{pmatrix}
@@ -321,19 +324,57 @@ In the previous section we said quaternions form a vector space, so technically 
       \mathbf{v}_1 \times \mathbf{v}_2
     \end{pmatrix}
   \end{equation}
-  The scalar part is minus the dot product of the two vectors and the vector part is the cross product--another way to re-derive equation \ref{eqn:multiplication} from a more readable/memorable place.\end{definition}
+  The scalar part is minus the dot product of the two vectors and the vector part is the cross product--another way to re-derive equation \ref{eqn:multiplication} when on a subway with no internet. If we introduce some new abusive notation we can define the dot product as
+\begin{equation}
+		\begin{pmatrix}
+      \mathbf{v}_1 \\
+      s_1
+    \end{pmatrix}
+    \cdot
+    \begin{pmatrix}
+      \mathbf{v}_2 \\
+      s_2
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+      0 \\
+      \mathbf{v}_1 \cdot \mathbf{v}_2
+    \end{pmatrix}
+	\end{equation}
+	and cross product of two quaternions as
+	\begin{equation}
+	\begin{pmatrix}
+      \mathbf{v}_1 \\
+      s_1
+    \end{pmatrix}
+    \times
+    \begin{pmatrix}
+      \mathbf{v}_2 \\
+      s_2
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+      \mathbf{v}_1 \times \mathbf{v}_2 \\
+      0
+    \end{pmatrix}
+	\end{equation}
+	Then the quaternion product can be written as
+\end{definition}
 
-\begin{theorem}[Quaternion Commutor]
-  Quaternion multiplication is not commutative. Its commutor is given by
+\begin{theorem}[Quaternion Commutator]
+  Quaternion multiplication is not commutative. Its commutator is given by
   \begin{equation}
-    \mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 = 2 \mathrm{q}_1 \times \mathrm{q}_2
+    \mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 = 2 \mathrm{q}_1 \times \mathrm{q}_2 \label{eqn:commutator}
   \end{equation}
 \end{theorem}
 \begin{proof}
-  Let $q_1$ and $q_2$ be any two quaternions. In terms of vectors, their commutor would be
+  For any two quaternions $\mathrm{q}_1=(\mathbf{v}_1, s_1)$ and $\mathrm{q}_2=(\mathbf{v}_2, s_2)$ be any two quaternions. Then their commutator expands to
   \begin{equation}
-    q_1\otimes q_2-q_2\otimes q_1
+		\mathrm{q}_1 \otimes \mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 =
     =
+		q_1
+		\begin{pmatrix}
+		\end{pmatrix}
     \begin{pmatrix}
       v_1 \times v_2 - v_2 \times v_1 \\
       -v_1\cdot v_2 +v_2\cdot v_1
@@ -343,7 +384,7 @@ In the previous section we said quaternions form a vector space, so technically 
   \begin{equation}
     q_1\otimes q_2-q_2\otimes q_1 =
     \begin{pmatrix}
-      2v_1\times v_2
+      0 \\ 2v_1\times v_2
     \end{pmatrix}
   \end{equation}
   If we allow $q_1\cdot q_2$ and $q_1\times q_2$ be the dot and cross product on their \emph{vector} component, respectively, then the commuter is simply: $2q_1\times q_2$
@@ -452,37 +493,64 @@ In the previous section we said quaternions form a vector space, so technically 
   \end{equation}
 \end{theorem}
 \begin{proof}
-  Let $\boldsymbol\omega$ be the angular velocity from frame $A$ to $B$. Let $^A\mathbf{v}$ and $^B\mathbf{v}$ be any vector described in basis $A$ and $B$ respectively, then
+  For any vector $\mathbf{v}$, there is a rotation described by quaternion $\mathrm{q}_{A2B}$ such that
+	\begin{equation}
+		\mathbf{v}_B = \mathrm{q}_{A2B} \otimes \mathbf{v}_A \otimes \mathrm{q}^*_{A2B}
+	\end{equation}
+	where $\mathbf{v}_A$ and $\mathbf{v}_B$ is the vector described in basis $A$ and $B$ respectively.
+	Let $\boldsymbol\omega_{A2B}$ be the angular velocity from reference frame $A$ to $B$, then 
   \begin{equation}
     \frac{d}{dt} {\mathbf{v}_B} = \frac{d}{dt} {\mathbf{v}_A} + \boldsymbol\omega_{A2B} \times {\mathbf{v}_A}
   \end{equation}
-  Affix the vector in $B$ perpendicular to the angular velocity such that $\mathbf{v}\cdot \boldsymbol\omega=0$. Since the dot product is zero, the cross product is equal to the quaternion product. Along with $\mathbf{v}$ being affixed in $B$ gives  
+  Affix the vector in $B$ so that $\frac{d}{dt}\mathbf{v}_B=0$ and perpendicular to the angular velocity such that $\mathbf{v}\cdot \boldsymbol\omega=0$. If the dot product of two vectors is zero, then their cross product is equal to their quaternion product.
   \begin{equation}
-    \frac{d}{dt} {\mathbf{v}_B} = \boldsymbol\omega_{A2B} \times {\mathbf{v}_A}
+    \frac{d}{dt} {\mathbf{v}_B} = \boldsymbol\omega_{A2B} \otimes {\mathbf{v}_A}
   \end{equation}
-  And
+  Expand the derivative of $\mathbf{v}_B$
   \begin{equation}
-    \frac{d}{dt} {\mathbf{v}_B}
-    = \mathrm{\dot{q}_{A2B}}\otimes\mathbf{v}_A\otimes\mathrm{q}_{A2B}^* + \mathrm{q}_{A2B}\otimes\mathbf{v}\otimes \mathrm{\dot{q}}_{A2B}^*
+    \frac{d}{dt} \left[\mathrm{q}_{A2B} \otimes \mathbf{v}_A \otimes \mathrm{q}^*_{A2B}\right]
+    = \mathrm{\dot{q}_{A2B}}\otimes\mathbf{v}_A\otimes\mathrm{q}_{A2B}^* + \mathrm{q}_{A2B}\otimes\mathbf{v}_A\otimes \mathrm{\dot{q}}_{A2B}^*
   \end{equation}
   After removing references to $\mathbf{v}_B$ we can clean up those two equations giving
   \begin{equation}
     \mathrm{\dot{q}}\mathbf{v}\mathrm{q}^* +\mathrm{q}\mathbf{v}\mathrm{\dot{q}}^* = \boldsymbol\omega\mathbf{v}
   \end{equation}
+  With some manipulation the equation becomes
+  \begin{equation}
+    \mathrm{q}^*\mathrm{\dot{q}}\mathbf{v}+\mathbf{v} \mathrm{\dot{q}}^*\mathrm{q} = \mathrm{q}^*\boldsymbol\omega \mathbf{v}\mathrm{q} \label{eqn:derivative_rearranged}
+  \end{equation}
   Since the conjugate is the inverse of the quaternion
   \begin{equation}
     \mathrm{q}^*\mathrm{q} =1
   \end{equation}
-  Taking the time derivative gives
+  Taking the time derivative gives the relation
   \begin{equation}
     \mathrm{\dot{q}}^*\mathrm{q} + \mathrm{q}^*\mathrm{\dot{q}} = 0
   \end{equation}
-  With some manipulation the equation relating to the angular velocity becomes
-  \begin{equation}
-    %% \mathrm{q}^*\mathrm{\dot{q}}\mathbf{v}+\mathbf{v} \mathrm{\dot{q}}^*\mathrm{q} = \mathrm{q}^*\boldsymbol\omega \mathbf{v}\mathrm{q} \\
-    \mathrm{q}^*\mathrm{\dot{q}}\mathbf{v}-\mathbf{v} \mathrm{\dot{q}}^*\mathrm{q} = \mathrm{q}^*\boldsymbol\omega \mathbf{v}\mathrm{q} \\
-  \end{equation}
-  
+	Or
+	\begin{equation}
+		\mathrm{\dot{q}}^* = -\mathrm{q}^*\mathrm{\dot{q}}\mathrm{q}^* \label{eqn:conjugate_derivative}
+	\end{equation}
+	Substituting into equation \ref{eqn:derivative_rearranged}
+	\begin{equation}
+		\mathrm{\dot{q}}\mathbf{v}\mathrm{q}^*-\mathrm{q}\mathbf{v}\mathrm{q}^*\mathrm{\dot{q}}\mathrm{q}^*=\boldsymbol\omega\mathbf{v}
+	\end{equation}
+  Using the commutator found in equation \ref{eqn:commutator}, we get
+	\begin{equation}
+		2\left(\mathrm{q}^*\mathrm{\dot{q}}\right) \times \mathbf{v} = \mathrm{q}^* \boldsymbol\omega\mathbf{v}\mathrm{q}
+	\end{equation}
+	Note that while the quaternion product is associative, the cross product is not. But, if both quaternions are pure quaternions, the cross product is equivalent to the quaternion product. So, from equation \ref{eqn:conjugate_derivative}, we get
+	\begin{equation}
+		2\mathrm{\dot{q}}^*\mathrm{q} = - \left(\mathrm{\dot{q}}^*\mathrm{q}\right)^*
+	\end{equation}
+	Remembering the definition of the conjugate, that means the scalar part must be zero (i.e. $w=-w\implies w=0$), which means that $\mathrm{\dot{q}}^*\mathrm{q}$ must be a pure quaternion
+	\begin{equation}
+		2\mathrm{q}^*\mathrm{\dot{q}}\mathbf{v} = \mathrm{q}^*\boldsymbol\omega\mathbf{v}\mathrm{q}
+	\end{equation}
+	Or
+	\begin{equation}
+		2\mathrm{\dot{q}}\mathbf{v} =\boldsymbol\omega\mathbf{v}\mathrm{q}
+	\end{equation}
   
 \end{proof}
 
