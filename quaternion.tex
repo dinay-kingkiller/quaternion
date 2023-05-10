@@ -320,8 +320,8 @@ In the previous section we said quaternions form a vector space, so technically 
   \begin{equation}
     \mathbf{v}_1\otimes\mathbf{v}_2 =
     \begin{pmatrix}
-      -\mathbf{v}_1\cdot \mathbf{v}_2\\
-      \mathbf{v}_1 \times \mathbf{v}_2
+      \mathbf{v}_1 \times \mathbf{v}_2\\
+      -\mathbf{v}_1\cdot \mathbf{v}_2
     \end{pmatrix}
   \end{equation}
   The scalar part is minus the dot product of the two vectors and the vector part is the cross product--another way to re-derive equation \ref{eqn:multiplication} when on a subway with no internet. If we introduce some new abusive notation we can define the dot product as
@@ -370,24 +370,39 @@ In the previous section we said quaternions form a vector space, so technically 
 \begin{proof}
   For any two quaternions $\mathrm{q}_1=(\mathbf{v}_1, s_1)$ and $\mathrm{q}_2=(\mathbf{v}_2, s_2)$ be any two quaternions. Then their commutator expands to
   \begin{equation}
-		\mathrm{q}_1 \otimes \mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 =
-    =
-		q_1
+		\mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 =s_1 \mathrm{q}_2 + s_2 \mathrm{q}_1
+		+
 		\begin{pmatrix}
+			\mathbf{v}_1\times\mathbf{v}_2 \\
+			\mathbf{v}_1\cdot\mathbf{v}_2
 		\end{pmatrix}
-    \begin{pmatrix}
-      v_1 \times v_2 - v_2 \times v_1 \\
-      -v_1\cdot v_2 +v_2\cdot v_1
-    \end{pmatrix}
+		- s_2 \mathrm{q}_1 - s_1 \mathrm{q}_2
+		-
+		\begin{pmatrix}
+			\mathbf{v}_2\times\mathbf{v}_1 \\
+			\mathbf{v}_2\cdot\mathbf{v}_1
+		\end{pmatrix}
   \end{equation}
-  The vector dot product is commutative $v_1\cdot v_2 = v_2\cdot v_1$, but the vector cross product is \emph{anti-}commutative $v_1\times v_2 = -v_2 \times v_1$. Thus
+	Since only the cross product is \emph{not} commutative the commutator reduces down to
   \begin{equation}
-    q_1\otimes q_2-q_2\otimes q_1 =
-    \begin{pmatrix}
-      0 \\ 2v_1\times v_2
-    \end{pmatrix}
+		\mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 =
+		\begin{pmatrix}
+			\mathbf{v}_1\times\mathbf{v}_2-\mathbf{v}_2\times\mathbf{v}_1 \\
+			0
+		\end{pmatrix}
   \end{equation}
-  If we allow $q_1\cdot q_2$ and $q_1\times q_2$ be the dot and cross product on their \emph{vector} component, respectively, then the commuter is simply: $2q_1\times q_2$
+	But, because  the cross product is \emph{anti-}commutative
+	\begin{equation}
+		\mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 =
+		\begin{pmatrix}
+			2\mathbf{v}_1\times\mathbf{v}_2\\
+			0
+		\end{pmatrix}
+	\end{equation}
+	If we allow the abuse of notation: the quaternion cross product is equal a pure quaternion where the vector part is the cross products of the vector part of the two quaternions, then
+	\begin{equation}
+		\mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 = 2 \mathrm{q}_1\times \mathrm{q}_2
+	\end{equation}
 \end{proof}
 
 
@@ -489,67 +504,69 @@ In the previous section we said quaternions form a vector space, so technically 
 \begin{theorem}
   For a constant angular velocity, the time derivative 
   \begin{equation}
-    \dot{q} = \frac{1}{2} q \otimes \boldsymbol\omega
+    \mathrm{\dot{q}} = -\frac{1}{2} \mathrm{q} \otimes \boldsymbol\omega
   \end{equation}
 \end{theorem}
 \begin{proof}
-  For any vector $\mathbf{v}$, there is a rotation described by quaternion $\mathrm{q}_{A2B}$ such that
+  For any two vectors $\mathbf{u}$ and $\mathbf{v}$ there is a rotation such that
 	\begin{equation}
-		\mathbf{v}_B = \mathrm{q}_{A2B} \otimes \mathbf{v}_A \otimes \mathrm{q}^*_{A2B}
+		\mathbf{v} = \mathrm{q} \otimes \mathbf{u} \otimes \mathrm{q}^*
 	\end{equation}
-	where $\mathbf{v}_A$ and $\mathbf{v}_B$ is the vector described in basis $A$ and $B$ respectively.
-	Let $\boldsymbol\omega_{A2B}$ be the angular velocity from reference frame $A$ to $B$, then 
+	Affix $\mathbf{u}$ in a basis $A$ and $\mathbf{v}$ in a basis $B$, then $\mathrm{q}$ is the quaternion to transforms basis $A$ to $B$.
+	Let $\boldsymbol\omega$ be the angular velocity from reference frame $B$ \emph{back to} $A$, then by the Transport Theorem
   \begin{equation}
-    \frac{d}{dt} {\mathbf{v}_B} = \frac{d}{dt} {\mathbf{v}_A} + \boldsymbol\omega_{A2B} \times {\mathbf{v}_A}
+    \frac{d}{dt} \mathbf{u} = \frac{d}{dt} \mathbf{v} + \boldsymbol\omega \times \mathbf{v}
   \end{equation}
-  Affix the vector in $B$ so that $\frac{d}{dt}\mathbf{v}_B=0$ and perpendicular to the angular velocity such that $\mathbf{v}\cdot \boldsymbol\omega=0$. If the dot product of two vectors is zero, then their cross product is equal to their quaternion product.
-  \begin{equation}
-    \frac{d}{dt} {\mathbf{v}_B} = \boldsymbol\omega_{A2B} \otimes {\mathbf{v}_A}
-  \end{equation}
-  Expand the derivative of $\mathbf{v}_B$
-  \begin{equation}
-    \frac{d}{dt} \left[\mathrm{q}_{A2B} \otimes \mathbf{v}_A \otimes \mathrm{q}^*_{A2B}\right]
-    = \mathrm{\dot{q}_{A2B}}\otimes\mathbf{v}_A\otimes\mathrm{q}_{A2B}^* + \mathrm{q}_{A2B}\otimes\mathbf{v}_A\otimes \mathrm{\dot{q}}_{A2B}^*
-  \end{equation}
-  After removing references to $\mathbf{v}_B$ we can clean up those two equations giving
-  \begin{equation}
-    \mathrm{\dot{q}}\mathbf{v}\mathrm{q}^* +\mathrm{q}\mathbf{v}\mathrm{\dot{q}}^* = \boldsymbol\omega\mathbf{v}
-  \end{equation}
-  With some manipulation the equation becomes
-  \begin{equation}
-    \mathrm{q}^*\mathrm{\dot{q}}\mathbf{v}+\mathbf{v} \mathrm{\dot{q}}^*\mathrm{q} = \mathrm{q}^*\boldsymbol\omega \mathbf{v}\mathrm{q} \label{eqn:derivative_rearranged}
-  \end{equation}
-  Since the conjugate is the inverse of the quaternion
-  \begin{equation}
-    \mathrm{q}^*\mathrm{q} =1
-  \end{equation}
-  Taking the time derivative gives the relation
-  \begin{equation}
-    \mathrm{\dot{q}}^*\mathrm{q} + \mathrm{q}^*\mathrm{\dot{q}} = 0
-  \end{equation}
-	Or
+	Or using the anti-commutativity of the cross product $(-\boldsymbol\omega\times\mathbf{v}=\mathbf{v}\times\boldsymbol\omega)$
 	\begin{equation}
-		\mathrm{\dot{q}}^* = -\mathrm{q}^*\mathrm{\dot{q}}\mathrm{q}^* \label{eqn:conjugate_derivative}
+		\frac{d}{dt}\mathbf{v} = \frac{d}{dt} \mathbf{u} + \mathbf{v}\times\boldsymbol\omega
 	\end{equation}
-	Substituting into equation \ref{eqn:derivative_rearranged}
+	As the focus of this paper is on applications, and specifically on applications in robotics, this formulation of the quaternion and angular velocity is chosen for the typical IMU setup. 
+  Since $\mathbf{u}$ is fixed in $A$ then $\frac{d}{dt}\mathbf{u}=0$ (Again similar to a vector fixed in an inertial frame in robotics). Expanding the derivative in terms of $\mathbf{u}$
 	\begin{equation}
-		\mathrm{\dot{q}}\mathbf{v}\mathrm{q}^*-\mathrm{q}\mathbf{v}\mathrm{q}^*\mathrm{\dot{q}}\mathrm{q}^*=\boldsymbol\omega\mathbf{v}
+		\frac{d}{dt}\left[\mathrm{q}\otimes\mathbf{u}\otimes\mathrm{q^*}\right] = \mathrm{\dot{q}}\otimes \mathbf{u} \otimes \mathrm{q^*} + \mathrm{q} \otimes \mathbf{u} \otimes \mathrm{\dot{q}}^* 
+	\end{equation}
+	Or in terms of $\mathbf{v}$
+	\begin{equation}
+		\frac{d}{dt} \mathbf{v} = \mathrm{\dot{q}} \otimes \mathrm{q}^* \otimes \mathbf{v} +
+		\mathbf{v}\otimes\mathrm{q}\otimes\mathrm{\dot{q}^*}
+	\end{equation}
+	If angular velocity is constant, then fixed vector $\mathbf{u}$ can be chosen to be perpendicular to angular velocity, so that the dot product in both frames goes to zero (Imagine that $\mathbf{u}$ and $\mathbf{v}$ are in the unchanging plane that spins perpendicular to the angular velocity).
+	If the dot product of two pure quaternions is zero, the quaternion product is equivalent to the cross product.
+	Using this
+  \begin{equation}
+    \mathrm{\dot{q}} \otimes \mathrm{q}^* \otimes \mathbf{v}
+		+ \mathbf{v}\otimes\mathrm{q}\otimes\mathrm{\dot{q}^*}
+		= \mathbf{v} \otimes \boldsymbol\omega
+  \end{equation}
+	Since the conjugate is the inverse of the quaternion
+	\begin{equation}
+		\mathrm{q^*}\otimes\mathrm{q} = 1 \implies \mathrm{\dot{q}^*} \otimes\mathrm{q}+\mathrm{q^*}\otimes\mathrm{\dot{q}} = 0 \implies \mathrm{\dot{q}^*} = -\mathrm{q^*}\otimes\mathrm{\dot{q}}\otimes\mathrm{q^*}
+	\end{equation}
+	Substituting
+	\begin{equation}
+    \mathrm{\dot{q}} \otimes \mathrm{q}^* \otimes \mathbf{v}
+		- \mathbf{v}\otimes\mathrm{\dot{q}}\otimes\mathrm{q^*}
+		= \mathbf{v} \otimes \boldsymbol\omega
 	\end{equation}
   Using the commutator found in equation \ref{eqn:commutator}, we get
 	\begin{equation}
-		2\left(\mathrm{q}^*\mathrm{\dot{q}}\right) \times \mathbf{v} = \mathrm{q}^* \boldsymbol\omega\mathbf{v}\mathrm{q}
+		-\mathbf{v}\times2\left(\mathrm{q}^*\otimes\mathrm{\dot{q}}\right) = \mathbf{v}\otimes\boldsymbol\omega
 	\end{equation}
-	Note that while the quaternion product is associative, the cross product is not. But, if both quaternions are pure quaternions, the cross product is equivalent to the quaternion product. So, from equation \ref{eqn:conjugate_derivative}, we get
+	Note that while the quaternion product is associative, the cross product is not.
+	But, if both quaternions are pure quaternions, the cross product is equivalent to the quaternion product.
+	So, from the earlier quaternion conjugate derivative calculation, we get
 	\begin{equation}
-		2\mathrm{\dot{q}}^*\mathrm{q} = - \left(\mathrm{\dot{q}}^*\mathrm{q}\right)^*
+		\mathrm{\dot{q}^*}\otimes\mathrm{q} = - \mathrm{q^*} \otimes \mathrm{\dot{q}} \implies \left(\mathrm{q}^*\otimes\mathrm{\dot{q}}\right)^* = - \mathrm{q^*} \otimes \mathrm{\dot{q}}
 	\end{equation}
-	Remembering the definition of the conjugate, that means the scalar part must be zero (i.e. $w=-w\implies w=0$), which means that $\mathrm{\dot{q}}^*\mathrm{q}$ must be a pure quaternion
+	Note that the distributivity of the conjugate reverses the quaternion product order.
+	If a quaternion is equal to minus its conjugate, then it must be a pure quaternion $(w=-w\implies w = 0)$
 	\begin{equation}
-		2\mathrm{q}^*\mathrm{\dot{q}}\mathbf{v} = \mathrm{q}^*\boldsymbol\omega\mathbf{v}\mathrm{q}
+		-2\mathbf{v}\otimes\mathrm{q^*}\otimes\mathrm{\dot{q}} = \mathbf{v}\otimes\boldsymbol\omega
 	\end{equation}
-	Or
+	Or, re-arranging,
 	\begin{equation}
-		2\mathrm{\dot{q}}\mathbf{v} =\boldsymbol\omega\mathbf{v}\mathrm{q}
+		\mathrm{\dot{q}} = -\frac{1}{2} \mathrm{q}\otimes\boldsymbol\omega
 	\end{equation}
   
 \end{proof}
