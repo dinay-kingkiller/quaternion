@@ -502,73 +502,140 @@ In the previous section we said quaternions form a vector space, so technically 
 \end{proof}
 
 \begin{theorem}
-  For a constant angular velocity, the time derivative 
+  If frame $B$ is rotating in frame $A$ at a constant angular velocity, then the rate of change of the quaternion is given by
   \begin{equation}
-    \mathrm{\dot{q}} = -\frac{1}{2} \mathrm{q} \otimes \boldsymbol\omega
+    \mathrm{\dot{q}} = \frac{1}{2}
+    \begin{pmatrix}
+      \boldsymbol\omega\\
+      0
+    \end{pmatrix}
+    \otimes \mathrm{q}
+    = \frac{1}{2} \mathrm{q} \otimes
+    \begin{pmatrix}
+      \boldsymbol\omega'\\
+      0
+    \end{pmatrix}
   \end{equation}
+  where $\boldsymbol\omega\in\mathbb{R}^3$ and $\boldsymbol\omega'\in\mathbb{R}^3$ are the angular velocity of frame $B$ in $A$ and $A$ in $B$ respectively.
 \end{theorem}
 \begin{proof}
-  For any two vectors $\mathbf{u}$ and $\mathbf{v}$ there is a rotation such that
-	\begin{equation}
-		\mathbf{v} = \mathrm{q} \otimes \mathbf{u} \otimes \mathrm{q}^*
-	\end{equation}
-	Affix $\mathbf{u}$ in a basis $A$ and $\mathbf{v}$ in a basis $B$, then $\mathrm{q}$ is the quaternion to transforms basis $A$ to $B$.
-	Let $\boldsymbol\omega$ be the angular velocity from reference frame $B$ \emph{back to} $A$, then by the Transport Theorem
+  Let $\mathbf{v}$ and $\mathbf{v}'$ be two vectors fixed in basis $A$ and $B$ respectively, with a rotation between them described by $\mathrm{q}$
   \begin{equation}
-    \frac{d}{dt} \mathbf{u} = \frac{d}{dt} \mathbf{v} + \boldsymbol\omega \times \mathbf{v}
+    \begin{pmatrix}
+      \mathbf{v}'\\
+      0
+    \end{pmatrix}
+    = \mathrm{q} \otimes
+    \begin{pmatrix}
+      \mathbf{v} \\
+      0
+    \end{pmatrix}
+    \otimes \mathrm{q}^*
   \end{equation}
-	Or using the anti-commutativity of the cross product $(-\boldsymbol\omega\times\mathbf{v}=\mathbf{v}\times\boldsymbol\omega)$
-	\begin{equation}
-		\frac{d}{dt}\mathbf{v} = \frac{d}{dt} \mathbf{u} + \mathbf{v}\times\boldsymbol\omega
-	\end{equation}
-	As the focus of this paper is on applications, and specifically on applications in robotics, this formulation of the quaternion and angular velocity is chosen for the typical IMU setup. 
-  Since $\mathbf{u}$ is fixed in $A$ then $\frac{d}{dt}\mathbf{u}=0$ (Again similar to a vector fixed in an inertial frame in robotics). Expanding the derivative in terms of $\mathbf{u}$
-	\begin{equation}
-		\frac{d}{dt}\left[\mathrm{q}\otimes\mathbf{u}\otimes\mathrm{q^*}\right] = \mathrm{\dot{q}}\otimes \mathbf{u} \otimes \mathrm{q^*} + \mathrm{q} \otimes \mathbf{u} \otimes \mathrm{\dot{q}}^* 
-	\end{equation}
-	Or in terms of $\mathbf{v}$
-	\begin{equation}
-		\frac{d}{dt} \mathbf{v} = \mathrm{\dot{q}} \otimes \mathrm{q}^* \otimes \mathbf{v} +
-		\mathbf{v}\otimes\mathrm{q}\otimes\mathrm{\dot{q}^*}
-	\end{equation}
-	If angular velocity is constant, then fixed vector $\mathbf{u}$ can be chosen to be perpendicular to angular velocity, so that the dot product in both frames goes to zero (Imagine that $\mathbf{u}$ and $\mathbf{v}$ are in the unchanging plane that spins perpendicular to the angular velocity).
-	If the dot product of two pure quaternions is zero, the quaternion product is equivalent to the cross product.
-	Using this
+  Affix $\mathbf{u}$ in a basis $A$ and $\mathbf{v}$ in a basis $B$, then $\mathrm{q}$ is the quaternion to transforms basis $A$ to $B$.
+  Let $\boldsymbol\omega$ be the angular velocity of reference frame $B$ in $A$ then by the Transport Theorem, the derivative in basis $A$ is
   \begin{equation}
-    \mathrm{\dot{q}} \otimes \mathrm{q}^* \otimes \mathbf{v}
-		+ \mathbf{v}\otimes\mathrm{q}\otimes\mathrm{\dot{q}^*}
-		= \mathbf{v} \otimes \boldsymbol\omega
+    \frac{d}{dt} \mathbf{v}' = \frac{d}{dt} \mathbf{v} + \boldsymbol\omega \times \mathbf{v}'
   \end{equation}
-	Since the conjugate is the inverse of the quaternion
-	\begin{equation}
-		\mathrm{q^*}\otimes\mathrm{q} = 1 \implies \mathrm{\dot{q}^*} \otimes\mathrm{q}+\mathrm{q^*}\otimes\mathrm{\dot{q}} = 0 \implies \mathrm{\dot{q}^*} = -\mathrm{q^*}\otimes\mathrm{\dot{q}}\otimes\mathrm{q^*}
-	\end{equation}
-	Substituting
-	\begin{equation}
-    \mathrm{\dot{q}} \otimes \mathrm{q}^* \otimes \mathbf{v}
-		- \mathbf{v}\otimes\mathrm{\dot{q}}\otimes\mathrm{q^*}
-		= \mathbf{v} \otimes \boldsymbol\omega
-	\end{equation}
-  Using the commutator found in equation \ref{eqn:commutator}, we get
-	\begin{equation}
-		-\mathbf{v}\times2\left(\mathrm{q}^*\otimes\mathrm{\dot{q}}\right) = \mathbf{v}\otimes\boldsymbol\omega
-	\end{equation}
-	Note that while the quaternion product is associative, the cross product is not.
-	But, if both quaternions are pure quaternions, the cross product is equivalent to the quaternion product.
-	So, from the earlier quaternion conjugate derivative calculation, we get
-	\begin{equation}
-		\mathrm{\dot{q}^*}\otimes\mathrm{q} = - \mathrm{q^*} \otimes \mathrm{\dot{q}} \implies \left(\mathrm{q}^*\otimes\mathrm{\dot{q}}\right)^* = - \mathrm{q^*} \otimes \mathrm{\dot{q}}
-	\end{equation}
-	Note that the distributivity of the conjugate reverses the quaternion product order.
-	If a quaternion is equal to minus its conjugate, then it must be a pure quaternion $(w=-w\implies w = 0)$
-	\begin{equation}
-		-2\mathbf{v}\otimes\mathrm{q^*}\otimes\mathrm{\dot{q}} = \mathbf{v}\otimes\boldsymbol\omega
-	\end{equation}
-	Or, re-arranging,
-	\begin{equation}
-		\mathrm{\dot{q}} = -\frac{1}{2} \mathrm{q}\otimes\boldsymbol\omega
-	\end{equation}
-  
+  with $\frac{d}{dt}\mathbf{v}=0$.
+  Using that and expanding the derivative of $\mathbf{v}'$
+  \begin{equation}
+    \mathrm{\dot{q}} \otimes
+    \begin{pmatrix}
+      \mathbf{v} \\
+      0
+    \end{pmatrix}
+    \otimes \mathrm{q}^* + \mathrm{q} \otimes
+    \begin{pmatrix}
+      \mathbf{v} \\
+      0
+    \end{pmatrix}
+    \otimes \mathrm{\dot{q}^*} =
+    \begin{pmatrix}
+      \boldsymbol\omega\times\mathbf{v}' \\
+      0
+    \end{pmatrix}
+  \end{equation}
+  Or in terms of $\mathbf{v}'$
+  \begin{equation}
+    \mathrm{\dot{q}}\otimes\mathrm{q^*}\otimes
+    \begin{pmatrix}
+      \mathbf{v}'\\
+      0
+    \end{pmatrix}
+    +
+    \begin{pmatrix}
+      \mathbf{v}'\\
+      0
+    \end{pmatrix}
+    \otimes \mathrm{q} \otimes \mathrm{\dot{q}^*} =
+    \begin{pmatrix}
+      \boldsymbol\omega\times\mathbf{v}' \\
+      0
+    \end{pmatrix}
+  \end{equation}
+  Since the conjugate is the inverse of the quaternion
+  \begin{equation}
+    \mathrm{q}\otimes\mathrm{q^*} = 1 \implies
+    \mathrm{\dot{q}} \otimes\mathrm{q^*}+\mathrm{q}\otimes\mathrm{\dot{q}^*} = 0 \implies
+    \mathrm{q}\otimes\mathrm{\dot{q}^*} = -\mathrm{\dot{q}}\otimes\mathrm{q^*}
+  \end{equation}
+  Also
+  \begin{equation}
+    \mathrm{q}\otimes\mathrm{\dot{q}^*} = -\mathrm{\dot{q}}\otimes\mathrm{q^*} \implies
+    \left(\mathrm{\dot{q}}\otimes\mathrm{q}^*\right)^*=-\mathrm{\dot{q}}\otimes \mathrm{q^*}
+  \end{equation}
+  which implies that $\mathrm{\dot{q}}\otimes\mathrm{q}^*$ is a pure quaternion. Let $(\mathbf{u}, 0) = \mathrm{\dot{q}}\otimes\mathrm{q}^*$.
+  Substituting the previous result
+  \begin{equation}
+    \begin{pmatrix}
+      \mathbf{u} \\
+      0
+    \end{pmatrix}
+    \otimes
+    \begin{pmatrix}
+      \mathbf{v}'\\
+      0
+    \end{pmatrix}
+    -
+    \begin{pmatrix}
+      \mathbf{v}'\\
+      0
+    \end{pmatrix}
+    \otimes
+    \begin{pmatrix}
+      \mathbf{u}\\
+      0
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+      \boldsymbol\omega\times\mathbf{v}'\\
+      0
+    \end{pmatrix}
+  \end{equation}
+  The left-hand side is the quaternion commutator. For two pure quaternions the vector part of the expression can be re-written
+  \begin{equation}
+    2\mathbf{u}\times\mathbf{v}' = \boldsymbol\omega\times\mathbf{v}'
+  \end{equation}
+  which only implies that $(2\mathbf{u}-\boldsymbol\omega)\times\mathbf{v}' = \mathbf{0}$.
+  The relationship $2\mathbf{u}=\boldsymbol\omega$ is true only if $2\mathbf{u}\cdot\mathbf{v}'=\boldsymbol\omega\cdot\mathbf{v}'$.
+  If the relationship is true then
+  \begin{equation}
+    2\mathrm{\dot{q}}\otimes\mathrm{q^*} =
+    \begin{pmatrix}
+      \boldsymbol\omega \\
+      0
+    \end{pmatrix}
+  \end{equation}
+  Or re-arranging
+  \begin{equation}
+    \mathrm{\dot{q}} = \frac{1}{2}
+    \begin{pmatrix}
+      \boldsymbol\omega \\
+      0
+    \end{pmatrix}
+    \otimes \mathrm{q}
+  \end{equation}
 \end{proof}
 
 Linear interpolation
