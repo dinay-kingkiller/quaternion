@@ -1,5 +1,4 @@
 \documentclass{amsart}
-
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 
@@ -268,7 +267,11 @@ This section is overly formal and could probably be left out, still...with our s
       1
     \end{pmatrix}
   \end{equation}
-  Each quaternion can now be written out $q = x \mathbf{i} + y \mathbf{j} + z \mathbf{z} + w \mathbf{1}$. The $\mathbf{1}$ is the unit quaternion and can be dropped after our previous formalizations of scalar/quaternion addition. Since we previously defined the addition of a scalar with a quaternion the $\mathbf{1}$ can also be dropped, i.e. $w+\mathrm{q} = w\mathbf{1} +\mathrm{q}$ for all scalars $w\in\mathbb{R}$
+  Every quaternion can be described in these unit bases
+  \begin{equation}
+    q = x \mathbf{i} + y \mathbf{j} + z \mathbf{z} + w \mathbf{1}
+  \end{equation}
+  Since we previously defined the addition of a scalar with a quaternion the $\mathbf{1}$ can also be dropped, i.e. $w+\mathrm{q} = w\mathbf{1} +\mathrm{q}$ for all scalars $w\in\mathbb{R}$
 \end{definition}
 
 \begin{theorem}
@@ -325,8 +328,8 @@ In the previous section we said quaternions form a vector space, so technically 
     \end{pmatrix}
   \end{equation}
   The scalar part is minus the dot product of the two vectors and the vector part is the cross product--another way to re-derive equation \ref{eqn:multiplication} when on a subway with no internet. If we introduce some new abusive notation we can define the dot product as
-\begin{equation}
-		\begin{pmatrix}
+  \begin{equation}
+    \begin{pmatrix}
       \mathbf{v}_1 \\
       s_1
     \end{pmatrix}
@@ -340,10 +343,10 @@ In the previous section we said quaternions form a vector space, so technically 
       0 \\
       \mathbf{v}_1 \cdot \mathbf{v}_2
     \end{pmatrix}
-	\end{equation}
-	and cross product of two quaternions as
-	\begin{equation}
-	\begin{pmatrix}
+  \end{equation}
+  and cross product of two quaternions as
+  \begin{equation}
+    \begin{pmatrix}
       \mathbf{v}_1 \\
       s_1
     \end{pmatrix}
@@ -357,8 +360,8 @@ In the previous section we said quaternions form a vector space, so technically 
       \mathbf{v}_1 \times \mathbf{v}_2 \\
       0
     \end{pmatrix}
-	\end{equation}
-	Then the quaternion product can be written as
+  \end{equation}
+  Then the quaternion product can be written as
 \end{definition}
 
 \begin{theorem}[Quaternion Commutator]
@@ -370,39 +373,37 @@ In the previous section we said quaternions form a vector space, so technically 
 \begin{proof}
   For any two quaternions $\mathrm{q}_1=(\mathbf{v}_1, s_1)$ and $\mathrm{q}_2=(\mathbf{v}_2, s_2)$ be any two quaternions. Then their commutator expands to
   \begin{equation}
-		\mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 =s_1 \mathrm{q}_2 + s_2 \mathrm{q}_1
-		+
-		\begin{pmatrix}
-			\mathbf{v}_1\times\mathbf{v}_2 \\
-			\mathbf{v}_1\cdot\mathbf{v}_2
-		\end{pmatrix}
-		- s_2 \mathrm{q}_1 - s_1 \mathrm{q}_2
-		-
-		\begin{pmatrix}
-			\mathbf{v}_2\times\mathbf{v}_1 \\
-			\mathbf{v}_2\cdot\mathbf{v}_1
-		\end{pmatrix}
+    \mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 =s_1 \mathrm{q}_2 + s_2 \mathrm{q}_1 +
+    \begin{pmatrix}
+      \mathbf{v}_1\times\mathbf{v}_2 \\
+      \mathbf{v}_1\cdot\mathbf{v}_2
+    \end{pmatrix}
+    - s_2 \mathrm{q}_1 - s_1 \mathrm{q}_2 -
+    \begin{pmatrix}
+      \mathbf{v}_2\times\mathbf{v}_1 \\
+      \mathbf{v}_2\cdot\mathbf{v}_1
+    \end{pmatrix}
   \end{equation}
-	Since only the cross product is \emph{not} commutative the commutator reduces down to
+  Since only the cross product is \emph{not} commutative the commutator reduces down to
   \begin{equation}
-		\mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 =
-		\begin{pmatrix}
-			\mathbf{v}_1\times\mathbf{v}_2-\mathbf{v}_2\times\mathbf{v}_1 \\
-			0
-		\end{pmatrix}
+    \mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 =
+    \begin{pmatrix}
+      \mathbf{v}_1\times\mathbf{v}_2-\mathbf{v}_2\times\mathbf{v}_1 \\
+      0
+    \end{pmatrix}
   \end{equation}
-	But, because  the cross product is \emph{anti-}commutative
-	\begin{equation}
-		\mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 =
-		\begin{pmatrix}
-			2\mathbf{v}_1\times\mathbf{v}_2\\
-			0
-		\end{pmatrix}
-	\end{equation}
-	If we allow the abuse of notation: the quaternion cross product is equal a pure quaternion where the vector part is the cross products of the vector part of the two quaternions, then
-	\begin{equation}
-		\mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 = 2 \mathrm{q}_1\times \mathrm{q}_2
-	\end{equation}
+  But, because  the cross product is \emph{anti-}commutative
+  \begin{equation}
+    \mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 =
+    \begin{pmatrix}
+      2\mathbf{v}_1\times\mathbf{v}_2\\
+      0
+    \end{pmatrix}
+  \end{equation}
+  If we allow the abuse of notation: the quaternion cross product is equal a pure quaternion where the vector part is the cross products of the vector part of the two quaternions, then
+  \begin{equation}
+    \mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 = 2 \mathrm{q}_1\times \mathrm{q}_2
+  \end{equation}
 \end{proof}
 
 
@@ -414,11 +415,11 @@ In the previous section we said quaternions form a vector space, so technically 
 
 \begin{theorem}
   Quaternions with norm $\|\mathrm{q}\|=1$ form a subgroup with the quaternion product.
-	\begin{itemize}
-	\item Closure: If $\|\mathrm{q}_1\|=1$ and $\|\mathrm{q}_2\|=1$ then $\|\mathrm{q}_1\mathrm{q}_2\|=1$
-	\item Identity: The identity quaternion is a versor $\|\mathbf{1}\|=1$
-	\item Inverse: The inverse of a versor is its conjugate $\mathrm{q}\mathrm{q}^*=1=\mathrm{q}^*\mathrm{q}$
-	\end{itemize}
+  \begin{itemize}
+  \item Closure: If $\|\mathrm{q}_1\|=1$ and $\|\mathrm{q}_2\|=1$ then $\|\mathrm{q}_1\mathrm{q}_2\|=1$
+  \item Identity: The identity quaternion is a versor $\|\mathbf{1}\|=1$
+  \item Inverse: The inverse of a versor is its conjugate $\mathrm{q}\mathrm{q}^*=1=\mathrm{q}^*\mathrm{q}$
+  \end{itemize}
 \end{theorem}
 
 
@@ -510,16 +511,11 @@ In the previous section we said quaternions form a vector space, so technically 
       0
     \end{pmatrix}
     \otimes \mathrm{q}
-    = \frac{1}{2} \mathrm{q} \otimes
-    \begin{pmatrix}
-      \boldsymbol\omega'\\
-      0
-    \end{pmatrix}
   \end{equation}
-  where $\boldsymbol\omega\in\mathbb{R}^3$ and $\boldsymbol\omega'\in\mathbb{R}^3$ are the angular velocity of frame $B$ in $A$ and $A$ in $B$ respectively.
+  where $\boldsymbol\omega\in\mathbb{R}^3$ is the angular velocity of frame $B$ in $A$.
 \end{theorem}
 \begin{proof}
-  Let $\mathbf{v}$ and $\mathbf{v}'$ be two vectors fixed in basis $A$ and $B$ respectively, with a rotation between them described by $\mathrm{q}$
+  A unit quaternion $\mathrm{q}$ describes a rotation of a vector via
   \begin{equation}
     \begin{pmatrix}
       \mathbf{v}'\\
@@ -532,13 +528,13 @@ In the previous section we said quaternions form a vector space, so technically 
     \end{pmatrix}
     \otimes \mathrm{q}^*
   \end{equation}
-  Affix $\mathbf{u}$ in a basis $A$ and $\mathbf{v}$ in a basis $B$, then $\mathrm{q}$ is the quaternion to transforms basis $A$ to $B$.
-  Let $\boldsymbol\omega$ be the angular velocity of reference frame $B$ in $A$ then by the Transport Theorem, the derivative in basis $A$ is
+  where $\mathbf{v}$ and $\mathbf{v}'$ is that vector described in a basis $A$ and $B$ respectively.
+  Let $\boldsymbol\omega$ be the angular velocity of reference frame $B$ in $A$. Then by the Transport Theorem, the derivative in basis $A$ is
   \begin{equation}
     \frac{d}{dt} \mathbf{v}' = \frac{d}{dt} \mathbf{v} + \boldsymbol\omega \times \mathbf{v}'
   \end{equation}
-  with $\frac{d}{dt}\mathbf{v}=0$.
-  Using that and expanding the derivative of $\mathbf{v}'$
+  affix $\mathbf{v}$ in $A$ (i.e. $\frac{d}{dt}\mathbf{v}=0$).
+  Using that and expanding the derivative of $\mathbf{v}'$ gives
   \begin{equation}
     \mathrm{\dot{q}} \otimes
     \begin{pmatrix}
@@ -578,15 +574,9 @@ In the previous section we said quaternions form a vector space, so technically 
   \begin{equation}
     \mathrm{q}\otimes\mathrm{q^*} = 1 \implies
     \mathrm{\dot{q}} \otimes\mathrm{q^*}+\mathrm{q}\otimes\mathrm{\dot{q}^*} = 0 \implies
-    \mathrm{q}\otimes\mathrm{\dot{q}^*} = -\mathrm{\dot{q}}\otimes\mathrm{q^*}
-  \end{equation}
-  Also
-  \begin{equation}
-    \mathrm{q}\otimes\mathrm{\dot{q}^*} = -\mathrm{\dot{q}}\otimes\mathrm{q^*} \implies
     \left(\mathrm{\dot{q}}\otimes\mathrm{q}^*\right)^*=-\mathrm{\dot{q}}\otimes \mathrm{q^*}
   \end{equation}
-  which implies that $\mathrm{\dot{q}}\otimes\mathrm{q}^*$ is a pure quaternion. Let $(\mathbf{u}, 0) = \mathrm{\dot{q}}\otimes\mathrm{q}^*$.
-  Substituting the previous result
+  which implies that $\mathrm{\dot{q}}\otimes\mathrm{q}^*$ is a pure quaternion (For a quaternion $\mathrm{p}$, $-\mathrm{p}=\mathrm{p^*}$ is only true for a quaternion with a zero scalar part). Let $(\mathbf{u}, 0) = \mathrm{\dot{q}}\otimes\mathrm{q}^*=-\mathrm{q}\otimes\mathrm{\dot{q}^*}$, then
   \begin{equation}
     \begin{pmatrix}
       \mathbf{u} \\
@@ -613,7 +603,39 @@ In the previous section we said quaternions form a vector space, so technically 
       0
     \end{pmatrix}
   \end{equation}
-  The left-hand side is the quaternion commutator. For two pure quaternions the vector part of the expression can be re-written
+  The left-hand side is the quaternion commutator. Expanded it becomes
+  \begin{equation}
+    \begin{pmatrix}
+      \mathbf{u} \\
+      0
+    \end{pmatrix}
+    \otimes
+    \begin{pmatrix}
+      \mathbf{v}'\\
+      0
+    \end{pmatrix}
+    -
+    \begin{pmatrix}
+      \mathbf{v}'\\
+      0
+    \end{pmatrix}
+    \otimes
+    \begin{pmatrix}
+      \mathbf{u}\\
+      0
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+      \mathbf{u}\times\mathbf{v}'-\mathbf{v}'\times\mathbf{u} \\
+      \mathbf{u}\cdot\mathbf{v}'-\mathbf{v}'\cdot\mathbf{u}
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+      2\mathbf{u}\times\mathbf{v}'\\
+      0
+    \end{pmatrix}
+  \end{equation}
+  The vector part of the equation then becomes
   \begin{equation}
     2\mathbf{u}\times\mathbf{v}' = \boldsymbol\omega\times\mathbf{v}'
   \end{equation}
