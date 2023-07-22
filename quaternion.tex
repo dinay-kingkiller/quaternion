@@ -447,7 +447,7 @@ In the previous section we said quaternions form a vector space, so technically 
   \item Orthogonality: For all rotations $\|\mathbf{v}\|=\|R(\mathrm{q}, \mathbf{v})\|$
   \item Cover: For all vectors where $\|\mathbf{u}\|=\|\mathbf{v}\|$ there is a rotation $\mathbf{u}=R(\mathrm{q}, \mathbf{v})$
   \item Double Cover: Rotations are not unique $R(\mathrm{q},\mathbf{v})=R(-\mathrm{q},\mathbf{v})$
-  \item Closure: $R(\mathrm{q}_1, R(\mathrm{q}_2, \mathbf{v})) = R(\mathrm{q}_1\mathrm{q}_2, \mathbf{v})$
+  \item Closure: $R(\mathrm{q}_1, R(\mathrm{q}_2, \mathbf{v})) = R(\mathrm{q}_1\otimes\mathrm{q}_2, \mathbf{v})$
   \item Identity: The identity quaternion forms the identity rotation $\mathbf{v} = R(\mathbf{1}, \mathbf{v})$
   \item Inverse: $R(\mathrm{q}, R(\mathrm{q}^*, \mathbf{v})) = R(\mathbf{1}, \mathbf{v})$
   \end{itemize}
@@ -670,8 +670,56 @@ Spherical interpolation?
   \mathrm{q}_{k+1} = \exp\left(\frac{1}{2} \boldsymbol\omega\Delta t\right)q_k
 \end{equation}
 
-
-
+\section{Fictious Forces}
+THIS WHOLE SECTION NEEDS CHECKED
+\begin{theorem}
+The acceleration of a rotating body in an inertial frame $N$ creates fictious or inertial forces in the body frame $B$.
+Suppose you have an acceleration of a point $c$  described in the inertial frame $N$
+\begin{equation}
+  \mathbf{a}^N_c = a_x\mathbf{\hat{n}}_x + a_y \mathbf{\hat{n}}_y + a_z \mathbf{\hat{n}}_z
+\end{equation}
+\end{theorem}
+\begin{proof}
+  For a point $c$ on body $B$ accelerating away from point $o$ fixed in the inertial frame $N$
+  \begin{equation}
+    \mathbf{p}_{c/o} = p_x \mathbf{\hat{n}}_x + p_y \mathbf{\hat{n}}_y + p_z \mathbf{\hat{n}}_z
+  \end{equation}
+  and angular velocity
+  \begin{equation}
+    \boldsymbol\omega^N_B = \omega_x \mathbf{\hat{b}}_x + \omega_y \mathbf{\hat{b}}_y + \omega_z \mathbf{\hat{b}}_z
+  \end{equation}
+  The velocity of point $c$ in the body frame $B$ is then (CHECK SIGN)
+  \begin{equation}
+    \mathbf{v}^B_c &= \mathbf{v}^N_c + {\boldsymbol\omega^N_B}\times\mathbf{p}_{c/o}
+  \end{equation}
+  And acceleration is (THE TRIPLE PRODUCT NEEDS REDUCED)
+  \begin{equation}
+    \mathbf{a}^B_c &= \mathbf{a}^N_c + {\boldsymbol\omega^N_B}\times\mathbf{v}^N_c} + {\boldsymbol\omega^N_B}\times\left({\boldsymbol\omega^N_B}\times\mathbf{p}_{c/o}\right)
+  \end{equation}
+  In the inertial frame the linear equations of motion are
+  \begin{equation}
+    m\mathbf{a}^N_c = \mathbf{F}^N
+  \end{equation}
+  Or for the forces acting in frame $B$
+  \begin{equation}
+    \mathbf{F}^B=m\mathbf{a}^B_c = \mathbf{F}^N + m{\boldsymbol\omega^N_B}\times\mathbf{v}^N_c + m{\boldsymbol\omega^N_B}\times\left({\boldsymbol\omega^N_B}\times\mathbf{p}_{c/o}\right)
+  \end{equation}
+  Let $\mathbf{f}$ fictious forces acting in frame $B$, so that $m\mathbf{a}^B_c = \mathbf{F}^N + \mathbf{f}$
+  \begin{equation}
+    \frac{\mathbf{f}}{m} = {\boldsymbol\omega^N_B}\times\mathbf{v}^N_c + {\boldsymbol\omega^N_B}\times\left({\boldsymbol\omega^N_B}\times\mathbf{p}_{c/o}\right)
+  \end{equation}
+  In frame $N$, $\boldsymbol\omega^N_B$ is
+  \begin{align}
+    {\boldsymbol\omega^N_B}\cdot\mathbf{n}_x &= \omega_xq_x^2-\omega_xq_y^2 -\omega_xq_z^2+\omega_xq_w^2 \nonumber \\
+    &= 2\omega_yq_xq_y-2\omega_yq_zq_w +2\omega_zq_xq_z+2\omega_zq_yq_w \nonumber \\
+    {\boldsymbol\omega^N_B}\cdot\mathbf{n}_y &= 2\omega_xq_xq_y+2\omega_x
+  \end{align}
+  Expanding so that $a_i=\mathbf{f}/m\cdot\mathbf{\hat{b}}_i$ (EXPAND THE TRIPLE PRODUCT)
+  \begin{equation}
+    
+  \end{equation}
+  
+\end{proof}
 
 
 \end{document}
