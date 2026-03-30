@@ -78,10 +78,6 @@ Quaternions are almost magical with their ability to look like other concepts. T
       z_2 \\
       w_2
     \end{pmatrix} =
-% m_floats[3] * q.x() + m_floats[0] * q.m_floats[3] + m_floats[1] * q.z() - m_floats[2] * q.y(),
-% m_floats[3] * q.y() + m_floats[1] * q.m_floats[3] + m_floats[2] * q.x() - m_floats[0] * q.z(),
-% m_floats[3] * q.z() + m_floats[2] * q.m_floats[3] + m_floats[0] * q.y() - m_floats[1] * q.x(),
-% m_floats[3] * q.m_floats[3] - m_floats[0] * q.x() - m_floats[1] * q.y() - m_floats[2] * q.z());
     \begin{pmatrix}
       w_1x_2 + x_1w_2 + y_1z_2 - z_1y_2 \\
       w_1y_2 - x_1z_2 + y_1w_2 + z_1x_2 \\
@@ -89,7 +85,7 @@ Quaternions are almost magical with their ability to look like other concepts. T
       w_1w_2 - x_1x_2 - y_1y_2 - z_1z_2
     \end{pmatrix}
   \end{equation}
-  But multiplication is what makes quaternions, quaternions. Other sources will often have a different definition of multiplication for quaternions that is incompatible with this one. All quaternion multiplication definitions should have similar properties, but when applying this to other topics, the definition of This formulation of multiplication was chosen to coincide with the ROS package \texttt{tf2}. A less formal re-creation of some of these definitions can be found in the next section.
+  But multiplication is what makes quaternions, quaternions. Other sources will often have a different definition of multiplication for quaternions that is incompatible with this one. All quaternion multiplication definitions should have similar properties, but when applying this to other topics, the definition of this formulation of multiplication was chosen to coincide with the ROS package \texttt{tf2}. A less formal re-creation of some of these definitions can be found in the next section.
 \end{definition}
 
 \begin{theorem}
@@ -670,80 +666,4 @@ Spherical interpolation?
   \mathrm{q}_{k+1} = \exp\left(\frac{1}{2} \boldsymbol\omega\Delta t\right)q_k
 \end{equation}
 
-\section{Fictious Forces}
-THIS WHOLE SECTION NEEDS CHECKED
-\begin{theorem}
-The acceleration of a rotating body in an inertial frame $N$ creates fictious or inertial forces in the body frame $B$.
-Suppose you have an acceleration of a point $c$  described in the inertial frame $N$
-\begin{equation}
-  \mathbf{a}^N_c = a_x\mathbf{\hat{n}}_x + a_y \mathbf{\hat{n}}_y + a_z \mathbf{\hat{n}}_z
-\end{equation}
-\end{theorem}
-\begin{proof}
-  For a point $c$ on body $B$ accelerating away from point $o$ fixed in the inertial frame $N$
-  \begin{equation}
-    \mathbf{p}_{c/o} = p_x \mathbf{\hat{n}}_x + p_y \mathbf{\hat{n}}_y + p_z \mathbf{\hat{n}}_z
-  \end{equation}
-  and angular velocity
-  \begin{equation}
-    \boldsymbol\omega^N_B = \omega_x \mathbf{\hat{b}}_x + \omega_y \mathbf{\hat{b}}_y + \omega_z \mathbf{\hat{b}}_z
-  \end{equation}
-  The velocity of point $c$ in the body frame $B$ is then (CHECK SIGN)
-  \begin{equation}
-    \mathbf{v}^B_c = \mathbf{v}^N_c + {\boldsymbol\omega^N_B}\times\mathbf{p}_{c/o}
-  \end{equation}
-  And acceleration is (THE TRIPLE PRODUCT NEEDS REDUCED)
-  \begin{equation}
-    \mathbf{a}^B_c = \mathbf{a}^N_c + {\boldsymbol\omega^N_B}\times\mathbf{v}^N_c + {\boldsymbol\omega^N_B}\times\left({\boldsymbol\omega^N_B}\times\mathbf{p}_{c/o}\right)
-  \end{equation}
-  In the inertial frame the linear equations of motion are
-  \begin{equation}
-    m\mathbf{a}^N_c = \mathbf{F}^N
-  \end{equation}
-  Or for the forces acting in frame $B$
-  \begin{equation}
-    \mathbf{F}^B=m\mathbf{a}^B_c = \mathbf{F}^N + m{\boldsymbol\omega^N_B}\times\mathbf{v}^N_c + m{\boldsymbol\omega^N_B}\times\left({\boldsymbol\omega^N_B}\times\mathbf{p}_{c/o}\right)
-  \end{equation}
-  Let $\mathbf{f}$ fictious forces acting in frame $B$, so that $m\mathbf{a}^B_c = \mathbf{F}^N + \mathbf{f}$
-  \begin{equation}
-    \frac{\mathbf{f}}{m} = {\boldsymbol\omega^N_B}\times\mathbf{v}^N_c + {\boldsymbol\omega^N_B}\times\left({\boldsymbol\omega^N_B}\times\mathbf{p}_{c/o}\right)
-  \end{equation}
-  In frame $N$, $\boldsymbol\omega^N_B$ is
-  \begin{align}
-    {\boldsymbol\omega^N_B}\cdot\mathbf{n}_x &= \omega_xq_x^2-\omega_xq_y^2 -\omega_xq_z^2+\omega_xq_w^2 \nonumber \\
-    &= 2\omega_yq_xq_y-2\omega_yq_zq_w +2\omega_zq_xq_z+2\omega_zq_yq_w \nonumber \\
-    {\boldsymbol\omega^N_B}\cdot\mathbf{n}_y &= 2\omega_xq_xq_y+2\omega_x
-  \end{align}
-  Expanding so that $a_i=\mathbf{f}/m\cdot\mathbf{\hat{b}}_i$ (EXPAND THE TRIPLE PRODUCT)
-  
-\end{proof}
-\section{Inertial Acceleration}
-\begin{proof}
-  \begin{equation}
-    \mathbf{v}^B_c =\frac{^Nd}{dt} \mathbf{p}_{c/o} + {\boldsymbol\omega^B_N}\times\mathbf{p}_{c/o}
-  \end{equation}
-
-  \begin{equation}
-    \mathbf{v}^B_c = \mathbf{v}^N_c + {\boldsymbol\omega^B_N}\times\mathbf{p}_{c/o}
-  \end{equation}
-  
-  \begin{equation}
-    \mathbf{a}^B_c = \frac{^Nd}{dt} \mathbf{v}^B_c + {\boldsymbol\omega^B_N}\times \mathbf{v}^B_c 
-  \end{equation}
-  
-  \begin{equation}
-    \mathbf{a}^B_c = \mathbf{a}^N_c + {\boldsymbol\omega^B_N} \times \mathbf{v}^N_c+ {\boldsymbol\omega^B_N}\times\left({\boldsymbol\omega^B_N}\times\mathbf{r}_{c/o}\right)
-  \end{equation}
-
-  \begin{align}
-    {\boldsymbol\omega^B_N} &= \omega_x \mathbf{\hat{b}}_x + \omega_y \mathbf{\hat{b}}_y + \omega_z \mathbf{\hat{b}}_z \\
-    &=\omega_xq_x^2+\omega_xq_y^2
-  \end{align}
-\end{proof}
-
-
 \end{document}
-
-%-----------------------------------------------------------------------
-% End of quaternion.tex
-%-----------------------------------------------------------------------
