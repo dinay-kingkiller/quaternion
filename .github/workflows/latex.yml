@@ -22,3 +22,4 @@ jobs:
         with:
           name: quaternion-pdf
           path: quaternion.pdf
+          if-no-files-found: error
