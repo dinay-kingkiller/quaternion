@@ -4,6 +4,9 @@ on:
   push:
     paths:
       - quaternion.tex
+  pull_request:
+    paths:
+      - quaternion.tex
 
 jobs:
   build:
