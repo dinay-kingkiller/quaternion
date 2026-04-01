@@ -18,7 +18,11 @@
 \title{Quaternion Rotation}
 
 \begin{abstract}
-Quaternions are almost magical with their ability to look like other concepts. They can be described by group/ring theory, or in terms of hyper-complex numbers, or in terms of vector spaces, and they can exist as all three of these at once. There are many resources on the algebra and analysis of quaternions, but often their definitions disagree, making it difficult to compare results. This paper hopes to formally define one type of quaternion operations and use those to derive final results. We will brush over proofs of generic quaternion algebra, and push through to applications ready for implementation in code. The language in this paper is more formal than other treatments, but often formal thinking is useful for defining your quaternion class in the programming language of choice.
+Quaternions provide a unified framework that can be interpreted as elements of a division ring, hyper-complex numbers, or a four-dimensional vector space.
+Despite extensive literature, definitions and conventions for quaternion operations vary, which can complicate the translation of results into computational applications.
+This paper presents a formal treatment of quaternion algebra, defining addition, multiplication, and conjugation consistently, and demonstrates their use in representing rotations in three-dimensional space.
+We emphasize a formulation suitable for direct implementation in code, laying the foundation for extending these methods to rigid-body transformations in $\mathrm{SE}(3)$.
+Proofs of basic quaternion properties are summarized, while the focus remains on applications and computational implementation.
 \end{abstract}
 
 \maketitle
@@ -34,11 +38,11 @@ Quaternions are almost magical with their ability to look like other concepts. T
 %% Has an identity element
 %% Every nonzero element has a multiplicative inverse.
 \begin{definition}[Quaternion]
-  Quaternions, hopefully obvious from their name, are ordered 4-tuples
-  \begin{equation}
-    \mathrm{q}=(x, y, z, w)\in\mathbb{H}\subset\mathbb{R}^4.
-  \end{equation}
-  The set of quaternions $\mathbb{H}$ form a division ring with two operations $\oplus$ and $\otimes$
+Quaternions, hopefully obvious from their name, are ordered 4-tuples
+\begin{equation}
+\mathrm{q}=(x, y, z, w)\in\mathbb{H}\subset\mathbb{R}^4.
+\end{equation}
+The set of quaternions $\mathbb{H}$ form a division ring with two operations $\oplus$ and $\otimes$
 \end{definition}
 \begin{definition}[Quaternion Addition]
   Addition on quaternions is defined easily enough
