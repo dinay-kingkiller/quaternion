@@ -1,9 +1,6 @@
 name: Compile LaTeX for Review
 
 on:
-  push:
-    paths:
-      - quaternion.tex
   pull_request:
     paths:
       - quaternion.tex
