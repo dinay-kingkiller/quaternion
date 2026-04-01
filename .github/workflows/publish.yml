@@ -12,6 +12,7 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment: github-pages
 
     steps:
       - name: Checkout
@@ -33,4 +34,5 @@ jobs:
           path: public
 
       - name: Deploy to Pages
+        id: deploy_pages
         uses: actions/deploy-pages@4d90baf09e6b2c2505702c8788b21f8d5d6f2cbb # v4
