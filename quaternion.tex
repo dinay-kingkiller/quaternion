@@ -88,7 +88,7 @@ Beyond this point, even more fundamental properties, such as associativity, begi
   \end{equation}
   This definition aligns with the conventions used in the ROS package \texttt{tf2}.
   While other sources may define quaternion multiplication differently, they share the same underlying algebraic structure.
-  A less formal re-creation of some of these definitions can be found in the next section.
+  An equivalent formulation appears in the next section.
 \end{definition}
 
 \begin{theorem}
@@ -102,7 +102,7 @@ Beyond this point, even more fundamental properties, such as associativity, begi
 \end{theorem}
 
 \begin{theorem}
-  The (nonzero) quaternions form a \emph{non-commutative} group under multiplication, which gives them the following properties
+  The (nonzero) quaternions form a \emph{non-commutative} group under multiplication, which gives it the following properties
   \begin{itemize}
     \item Associativity: $\mathbf{q}_1 \otimes (\mathbf{q}_2 \otimes \mathbf{q}_3) = (\mathbf{q}_1 \otimes \mathbf{q}_2) \otimes \mathbf{q}_3$
     \item Identity: $\mathbf{q} \otimes \mathbf{1} = \mathbf{q} = \mathbf{1} \otimes \mathbf{q}$ where $\mathbf{1}$ is the identity quaternion $(0, 0, 0, 1)$
@@ -158,7 +158,7 @@ Scalar multiplication equips quaternions with the structure of a vector space ov
 \end{theorem}
 
 \begin{definition}
-  In the quaternion vector space we can define four orthogonal unit bases:
+  In the quaternion vector space, define four orthogonal unit basis elements
   \begin{equation}
     \mathbf{i} =
     \begin{pmatrix}
@@ -187,7 +187,7 @@ Scalar multiplication equips quaternions with the structure of a vector space ov
       0 \\
       0 \\
       1
-    \end{pmatrix}
+    \end{pmatrix}.
   \end{equation}
   Every quaternion can be described in this basis
   \begin{equation}
@@ -205,15 +205,15 @@ Scalar multiplication equips quaternions with the structure of a vector space ov
   Some papers use different definitions of unit bases, which would lead to a different equation \ref{eqn:multiplication}.
   The algebraic structure remains equivalent across differing conventions, but comparing sources can introduce sign errors or apparent changes in commutativity.
 \end{theorem}
-While this basis formulation is compact and mnemonic, an equivalent formulation in terms of vector operations will prove more useful for geometric interpretation and computation.
+While this basis formulation is compact and mnemonic, an equivalent formulation in terms of vector operations is more useful for geometric interpretation and computation.
 
 \section{Pure Quaternions}
 In the previous section we said quaternions form a vector space, so technically every quaternion is a 4-vector.
 In practice, quaternions are particularly useful because of how they interact with 3-vectors.
 \begin{definition}[Vector Quaternion]
   Quaternions can be interpreted as vectors with an attached scalar component.
-  With some abusive notation, every quaternion can be decomposed into a \emph{vector} (or \emph{pure quaternion}) $\vec{v} = \left(x, y, z, 0\right)$ and a scalar quaternion $s = \left(0,0,0,s\right)$: either $\vec{v}+s$ or, like below, $(\vec{v}, s)$.
-  Then addition can be defined as
+  Using a slight abuse of notation, every quaternion can be decomposed into a \emph{vector} (or \emph{pure quaternion}) $\vec{v} = \left(x, y, z, 0\right)$ and a scalar quaternion $s = \left(0,0,0,s\right)$: either $\vec{v}+s$ or, like below, $(\vec{v}, s)$.
+  Addition is defined as
   \begin{equation}
     \begin{pmatrix}
       \vec{v}_1 \\
@@ -321,7 +321,7 @@ In practice, quaternions are particularly useful because of how they interact wi
       s_2s_1 - \vec{v}_2 \cdot \vec{v}_1
     \end{pmatrix} \nonumber
   \end{equation}
-  Since only the cross product is \emph{not} commutative the commutator reduces down to
+  Since only the cross product is \emph{not} commutative, the commutator reduces down to
   \begin{equation}
     \begin{pmatrix}
       \vec{v}_1 \\
@@ -344,7 +344,7 @@ In practice, quaternions are particularly useful because of how they interact wi
       0
     \end{pmatrix} \nonumber
   \end{equation}
-  But, because  the cross product is \emph{anti-}commutative
+  But, because the cross product is \emph{anti-}commutative
   \begin{equation}
     \begin{pmatrix}
       \vec{v}_1 \\
@@ -369,76 +369,108 @@ In practice, quaternions are particularly useful because of how they interact wi
   \end{equation}
 \end{proof}
 
-%% \section{Unit Quaternion Subgroup}
-%% TODO
-%% Introduce the norm and its properties
-%% Show that the subgroup is closed.
-%% Show that the identity element is a member of the subgroup
-%% Introduce the conjugate
-%% Show that the conjugate is the inverse in the subgroup
-%% Maybe finally introduce the inverse...
-
-\section{Quaternion Rotation Group}
-\begin{theorem}
-  Quaternions with norm $\|\mathrm{q}\|=1$ form a subgroup with the quaternion product.
-  \begin{itemize}
-  \item Closure: If $\|\mathrm{q}_1\|=1$ and $\|\mathrm{q}_2\|=1$ then $\|\mathrm{q}_1\mathrm{q}_2\|=1$
-  \item Identity: The identity quaternion is a versor $\|\mathbf{1}\|=1$
-  \item Inverse: The inverse of a versor is its conjugate $\mathrm{q}\mathrm{q}^*=1=\mathrm{q}^*\mathrm{q}$
-  \end{itemize}
-\end{theorem}
+\section{Unit Quaternion Subgroup}
+The algebra of quaternions admits a natural notion of conjugation, which in turn defines a quadratic quantity known as the quadrance.
+Together, these structures endow $\mathbb{H}$ with the structure of a \emph{composition algebra}, in which the quadrance is multiplicative under quaternion multiplication.
+This multiplicative property allows us to identify a distinguished subset of quaternions whose quadrance is unity.
+As we will see, this subset forms a group under quaternion multiplication and will play a central role in describing rotations in three-dimensional space.
 
 \begin{definition}
-  Quaternions can be used to describe rotations in space. A versor rotates between reference frames $R:A\to B$. Without describing $\mathbf{v}\in\mathbb{R}^3$ in either $A$ or $B$ basis:
+  For a quaternion $\mathbf{q}=(\vec{v}, s)$, its \emph{conjugate} is given by 
   \begin{equation}
-    \begin{pmatrix}
-      \mathbf{v} \cdot \mathbf{\hat{b}}_x \\
-      \mathbf{v} \cdot \mathbf{\hat{b}}_y \\
-      \mathbf{v} \cdot \mathbf{\hat{b}}_z \\
-      0
-    \end{pmatrix}
-    = \mathrm{q}_{A2B} \otimes
-    \begin{pmatrix}
-      \mathbf{v} \cdot \mathbf{\hat{a}}_x \\
-      \mathbf{v} \cdot \mathbf{\hat{a}}_y \\
-      \mathbf{v} \cdot \mathbf{\hat{a}}_z \\
-      0
-    \end{pmatrix}
-    \otimes \mathrm{q}_{A2B}^*
+    \mathbf{q}^* := (-\vec{v}, s)
+  \end{equation}
+\end{definition}
+
+\begin{definition}
+  The \emph{quadrance} of a quaternion is the map $Q: \mathbb{H} \to \mathbb{R}$ defined by
+  \begin{equation}
+    Q(\mathbf{q}) := \mathbf{q} \otimes \mathbf{q}^*.
+  \end{equation}
+  Or, in coordinate form
+  \begin{equation}
+    Q(x\mathbf{i}+y\mathbf{j}+z\mathbf{k}+w) = x^2 + y^2 + z^2 + w^2.
   \end{equation}
 \end{definition}
 
 \begin{theorem}
-  These transformations also form a group: the orthogonal group. If $R(\mathrm{q}, \mathbf{v})=\mathrm{q}\mathbf{v}\mathrm{q}^*$
+  With these new definitions, the quaternion algebra $\mathbb{H}$ forms a composition algebra, which has the following properties:
   \begin{itemize}
-  \item Orthogonality: For all rotations $\|\mathbf{v}\|=\|R(\mathrm{q}, \mathbf{v})\|$
-  \item Cover: For all vectors where $\|\mathbf{u}\|=\|\mathbf{v}\|$ there is a rotation $\mathbf{u}=R(\mathrm{q}, \mathbf{v})$
-  \item Double Cover: Rotations are not unique $R(\mathrm{q},\mathbf{v})=R(-\mathrm{q},\mathbf{v})$
-  \item Closure: $R(\mathrm{q}_1, R(\mathrm{q}_2, \mathbf{v})) = R(\mathrm{q}_1\otimes\mathrm{q}_2, \mathbf{v})$
-  \item Identity: The identity quaternion forms the identity rotation $\mathbf{v} = R(\mathbf{1}, \mathbf{v})$
-  \item Inverse: $R(\mathrm{q}, R(\mathrm{q}^*, \mathbf{v})) = R(\mathbf{1}, \mathbf{v})$
+    \item Conjugation Involution: $\left(\mathbf{q}^*\right)^* = \mathbf{q}$,
+    \item Conjugation Reverses Multiplication: $(\mathbf{p}\otimes\mathbf{q})^*=\mathbf{q}^*\otimes\mathbf{p}^*$,
+    \item Quadrance Nondegeneracy: $Q(\mathbf{q})=0 \Leftrightarrow \mathbf{q} = \mathbf{0}$,
+    \item Quadrance Compatibility with Multiplication: $Q(\mathbf{p})Q(\mathbf{q})=Q(\mathbf{p}\otimes \mathbf{q})$.
+  \end{itemize}
+\end{theorem}
+
+\begin{definition}
+  The \emph{unit quaternion}, or \emph{versor}, subgroup $\mathrm{Spin}(3) \subset (\mathbb{H}, \otimes)$, is the set of quaternions with quadrance equal to 1.
+  \begin{equation}
+    \mathrm{Spin}(3) := \left\{\mathbf{q} \in \mathbb{H} : Q(\mathbf{q}) = 1\right\}
+  \end{equation}
+\end{definition}
+
+\begin{theorem}
+  This group has the following group properties
+  \begin{itemize}
+    \item Closure: If $Q(\mathbf{p})=1$ and $Q(\mathbf{q})=1$, then $Q(\mathbf{p}\otimes\mathbf{q})=1$.
+    \item Identity: The identity quaternion is a versor $\mathbf{1}\in\mathrm{Spin}(3)$.
+    \item Inverse: The inverse of a versor is the conjugate which is also a versor $\mathbf{q} \otimes \mathbf{q}^* = \mathbf{1}$.
+  \end{itemize}
+\end{theorem}
+
+\section{Quaternion Rotation Group}
+
+\begin{definition}
+  Unit quaternions act on vectors by conjugation, producing rotations in three-dimensional space.
+  The set of transforms of the form below form the rotation group.
+  \begin{equation}
+    \mathrm{Rot}(3) := \{\mathrm{R}_{\mathbf{q}} :\mathbf{q}\in\mathrm{Spin}(3), \vec{v} \mapsto \mathbf{q}\otimes(\vec{v}, 0)\otimes\mathbf{q}^*\}
+  \end{equation}
+\end{definition}
+
+\begin{theorem}
+  These transformations form a group
+  \begin{itemize}
+    \item Closure: Composition is quaternion multiplication $R_\mathbf{p} \circ R_\mathbf{q} = R_{\mathbf{p}\otimes\mathbf{q}}$
+  \item Identity: The identity quaternion forms the identity rotation $\vec{v} = R_\mathbf{1}(\vec{v})$
+  \item Inverse: The conjugate forms the inverse rotation $R_\mathbf{q} \circ R_{\mathbf{q}^*} = R_\mathbf{1}$
+  \item Cover: For all vectors where $Q(\vec{u})=Q(\vec{v})$ there is a rotation $\vec{u}=R_\mathbf{q}(\vec{v})$
+  \item Double Cover: Rotations are not unique $R_\mathbf{q}(\vec{v})=R_{-\mathbf{q}}(\vec{v})$
+  \end{itemize}
+\end{theorem}
+
+\begin{theorem}
+  In addition, quaternion rotation behaves well with 3-vectors:
+  \begin{itemize}
+    \item Orthogonality: $Q(R_\mathbf{q}(\vec{v}))=Q(v)$
+    \item Preserves the dot product: $\vec{u} \cdot \vec{v}=R_\mathbf{q}(\vec{u}) \cdot R_\mathbf{q}(\vec{v})$
+    \item Preserves the cross product: $R_\mathbf{q}\left(\vec{u}\times\vec{v}\right)=R_\mathbf{q}\vec{u} \times R_\mathbf{q}\vec{v}$.
   \end{itemize}
 \end{theorem}
 
 \begin{theorem}[Quaternion to Matrix]
   Every rotation $\mathrm{A}\to\mathrm{B}$ can be described as both a quaternion and a rotation matrix
   \begin{equation}
-    R(\mathrm{q}_{A2B}, \mathbf{v}) = R_{A2B}\left(\mathbf{v}\right)
+    R\vec{v} = R_\mathbf{q} \left(\vec{v}\right)
   \end{equation}
   that rotation matrix also collects the dot products of the rotation.
   
   \begin{tabular}{c|ccc}
     $R_{A2B}$ & $\hat{\mathbf{a}}_x$ & $\hat{\mathbf{a}}_y$ & $\hat{\mathbf{a}}_z$ \\
     \hline
-    $\hat{\mathbf{b}}_x$ & $x^2-y^2-z^2+w^2$ & $2xy-2zw$ & $2xz+2yw$ \\
-    $\hat{\mathbf{b}}_y$ & $2xy+2zw$ & $-x^2+y^2-z^2+w^2$ & $-2xw+2yz$ \\
-    $\hat{\mathbf{b}}_z$ & $2xz-2wy$ & $2xw+2yz$ & $-x^2-y^2+z^2+w^2$
+    $\hat{\mathbf{b}}_x$ & $1-2(y^2+z^2)$ & $2(xy-zw)$ & $2(xz+yw)$ \\
+    $\hat{\mathbf{b}}_y$ & $2(xy+zw)$ & $1-2(x^2+z^2)$ & $2(yz-xw)$ \\
+    $\hat{\mathbf{b}}_z$ & $2(xz-wy)$ & $2(xw+yz)$ & $1-2(x^2+y^2)$
   \end{tabular}\centering
 \end{theorem}
 \begin{proof}
   $R$ can be formed from algebra.
   \begin{equation}
-    R
+    \begin{pmatrix}
+      R & \vec{0}^\top \\
+      \vec{0} & 0
+    \end{pmatrix}
     \begin{pmatrix}
       v_x \\
       v_y \\
@@ -464,7 +496,25 @@ In practice, quaternions are particularly useful because of how they interact wi
       -y \\
       -z \\
       w
-    \end{pmatrix}
+    \end{pmatrix} \nonumber
+  \end{equation}
+  Expanding and collecting like terms
+  \begin{equation}
+    R =
+    \begin{pmatrix}
+      x^2-y^2-z^2+w^2 & 2xy-2zw & 2xz+2yw \\
+      2xy+2zw & -x^2+y^2-z^2+w^2 & -2xw+2yz \\
+      2xz-2wy & 2xw+2yz & -x^2-y^2+z^2+w^2
+    \end{pmatrix} \nonumber
+  \end{equation}
+  Since this is a unit quaternion, its quadrance is equal to one: $1=x^2+y^2+z^2+w^2$.
+  \begin{equation}
+    R =
+    \begin{pmatrix}
+      1-2(y^2+z^2) & 2(xy-zw) & 2(xz+yw) \\
+      2(xy+zw) & 1-2(x^2+z^2) & 2(yz-xw) \\
+      2(xz-wy) & 2(xw+yz) & 1-2(x^2+y^2)
+    \end{pmatrix} \nonumber
   \end{equation}
 \end{proof}
 
