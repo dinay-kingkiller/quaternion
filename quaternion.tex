@@ -266,10 +266,24 @@ In practice, quaternions are particularly useful because of how they interact wi
   The scalar part is minus the dot product of the two vectors and the vector part is the cross product, another way to re-derive equation \ref{eqn:multiplication} when on a subway with no internet.
 \end{definition}
 
-\begin{theorem}[Quaternion Commutator]
+\begin{theorem}
   Quaternion multiplication is not commutative.
-  Its commutator is given by
+  The commutator is defined by
   \begin{equation}
+    \left[\mathbf{q}_1, \mathbf{q}_2\right] := \mathbf{q}_1 \otimes \mathbf{q}_2 - \mathbf{q}_2 \otimes \mathbf{q}_1.
+  \end{equation}
+  It yields pure quaterions and is given by
+  \begin{equation}
+    \left[
+    \begin{pmatrix}
+      \vec{v}_1 \\
+      s_1
+    \end{pmatrix} ,
+    \begin{pmatrix}
+      \vec{v}_2 \\
+      s_2
+    \end{pmatrix}
+    \right] =
     \begin{pmatrix}
       \vec{v}_1 \\
       s_1
@@ -289,7 +303,7 @@ In practice, quaternions are particularly useful because of how they interact wi
     \begin{pmatrix}
       2\vec{v}_1 \times \vec{v}_2 \\
       0
-    \end{pmatrix} \label{eqn:commutator}
+    \end{pmatrix}. \label{eqn:commutator}
   \end{equation}
 \end{theorem}
 \begin{proof}
@@ -382,7 +396,11 @@ As we will see, this subset forms a group under quaternion multiplication and wi
 \end{definition}
 
 \begin{definition}
-  The \emph{quadrance} of a quaternion is the map $Q: \mathbb{H} \to \mathbb{R}$ defined by
+  The \emph{quadrance} of a quaternion is the map
+  \begin{equation}
+    Q: \mathbb{H} \to \mathrm{Re}(\mathbb{H}) \cong \mathbb{R}
+  \end{equation}
+  defined by
   \begin{equation}
     Q(\mathbf{q}) := \mathbf{q} \otimes \mathbf{q}^*.
   \end{equation}
@@ -424,7 +442,7 @@ As we will see, this subset forms a group under quaternion multiplication and wi
   Unit quaternions act on vectors by conjugation, producing rotations in three-dimensional space.
   The set of transforms of the form below form the rotation group.
   \begin{equation}
-    \mathrm{Rot}(3) := \{\mathrm{R}_{\mathbf{q}} :\mathbf{q}\in\mathrm{Spin}(3), \vec{v} \mapsto \mathbf{q}\otimes(\vec{v}, 0)\otimes\mathbf{q}^*\}
+    \mathrm{Rot}(3) := \{\mathrm{R}_{\mathbf{q}}:\mathrm{Im}(\mathbb{H})\to\mathrm{Im}(\mathbb{H}) :\mathbf{q}\in\mathrm{Spin}(3), \vec{v} \mapsto \mathbf{q}\otimes (\vec{v}, 0) \otimes\mathbf{q}^*\}
   \end{equation}
 \end{definition}
 
@@ -444,7 +462,7 @@ As we will see, this subset forms a group under quaternion multiplication and wi
   \begin{itemize}
     \item Orthogonality: $Q(R_\mathbf{q}(\vec{v}))=Q(\vec{v})$
     \item Preserves the dot product: $\vec{u} \cdot \vec{v}=R_\mathbf{q}(\vec{u}) \cdot R_\mathbf{q}(\vec{v})$
-    \item Preserves the cross product: $R_\mathbf{q}\left(\vec{u}\times\vec{v}\right)=R_\mathbf{q}\vec{u} \times R_\mathbf{q}\vec{v}$.
+    \item Preserves the cross product: $R_\mathbf{q}\left(\vec{u}\times\vec{v}\right)=R_\mathbf{q}(\vec{u})\times R_\mathbf{q}(\vec{v})$.
   \end{itemize}
 \end{theorem}
 
