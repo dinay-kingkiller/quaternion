@@ -1,7 +1,6 @@
 \documentclass{amsart}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
-
 \theoremstyle{definition}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{example}[theorem]{Example}
@@ -18,30 +17,30 @@
 \title{Quaternion Rotation}
 
 \begin{abstract}
-Quaternions are almost magical with their ability to look like other concepts. They can be described by group/ring theory, or in terms of hyper-complex numbers, or in terms of vector spaces, and they can exist as all three of these at once. There are many resources on the algebra and analysis of quaternions, but often their definitions disagree, making it difficult to compare results. This paper hopes to formally define one type of quaternion operations and use those to derive final results. We will brush over proofs of generic quaternion algebra, and push through to applications ready for implementation in code. The language in this paper is more formal than other treatments, but often formal thinking is useful for defining your quaternion class in the programming language of choice.
+  Quaternions provide a unified framework that can be interpreted as elements of a division ring, hyper-complex numbers, or a four-dimensional vector space.
+  Despite extensive literature, definitions and conventions for quaternion operations vary, which can complicate the translation of results into computational applications.
+  This paper presents a formal treatment of quaternion algebra, defining addition, multiplication, and conjugation consistently, and demonstrates their use in representing rotations.
+  We emphasize a formulation suitable for direct implementation in code, laying the foundation for extending these methods to rigid-body transformations in $\mathrm{SE}(3)$.
+  Proofs of basic quaternion properties are summarized, while the focus remains on applications and computational implementation.
 \end{abstract}
 
 \maketitle
 
 \section{The Quaternion Ring}
-%% A division ring has:
-%% Addition is associative
-%% addition identity
-%% Addition inverse
-%% Addition commutivity
-%% Multiplication that is associative
-%% Multiplication is associative over addition
-%% Has an identity element
-%% Every nonzero element has a multiplicative inverse.
+Quaternions arise as part of a remarkable sequence of algebraic extensions of the real numbers.
+Starting from the reals $\mathbb{R}$ and complex numbers $\mathbb{C}$, one can ask how far the familiar properties of arithmetic can be preserved in higher dimensions.
+The quaternions $\mathbb{H}$ are the smallest extension in which division remains possible but commutativity of multiplication must be abandoned.
+Beyond this point, even more fundamental properties, such as associativity, begin to fail, as seen in the octonions.
 \begin{definition}[Quaternion]
-  Quaternions, hopefully obvious from their name, are ordered 4-tuples
+  Formally, a quaternion is an ordered 4-tuple.
   \begin{equation}
-    \mathrm{q}=(x, y, z, w)\in\mathbb{H}\subset\mathbb{R}^4.
+    \mathbf{q} = (x, y, z, w) \in \mathbb{H} \subset \mathbb{R}^4.
   \end{equation}
-  The set of quaternions $\mathbb{H}$ form a division ring with two operations $\oplus$ and $\otimes$
+  The set of quaternions $\mathbb{H}$, equipped with the operations $\oplus$ and $\otimes$, forms a division ring.
 \end{definition}
+
 \begin{definition}[Quaternion Addition]
-  Addition on quaternions is defined easily enough
+  For two quaternions, addition is defined componentwise
   \begin{equation}
     \begin{pmatrix}
       x_1 \\
@@ -63,8 +62,9 @@ Quaternions are almost magical with their ability to look like other concepts. T
     \end{pmatrix}
   \end{equation}
 \end{definition}
+
 \begin{definition}[Quaternion Multiplication]
-  However, multiplication is more complex
+  Multiplication is defined as
   \begin{equation} \label{eqn:multiplication}
     \begin{pmatrix}
       x_1 \\
@@ -85,70 +85,44 @@ Quaternions are almost magical with their ability to look like other concepts. T
       w_1w_2 - x_1x_2 - y_1y_2 - z_1z_2
     \end{pmatrix}
   \end{equation}
-  But multiplication is what makes quaternions, quaternions. Other sources will often have a different definition of multiplication for quaternions that is incompatible with this one. All quaternion multiplication definitions should have similar properties, but when applying this to other topics, the definition of this formulation of multiplication was chosen to coincide with the ROS package \texttt{tf2}. A less formal re-creation of some of these definitions can be found in the next section.
+  This definition aligns with the conventions used in the ROS package \texttt{tf2}.
+  While other sources may define quaternion multiplication differently, they share the same underlying algebraic structure.
+  An equivalent formulation appears in the next section.
 \end{definition}
 
 \begin{theorem}
-  Quaternions form a commutative group with addition, which means they have the following properties
+  Quaternions form a commutative group under addition:
   \begin{itemize}
-  \item Associativity: $\mathrm{q}_1\oplus(\mathrm{q}_2\oplus \mathrm{q}_3) = (\mathrm{q}_1\oplus \mathrm{q}_2) \oplus \mathrm{q}_3$
-  \item Commutativity: $\mathrm{q}_1\oplus \mathrm{q}_2 = \mathrm{q}_2 \oplus \mathrm{q}_1$
-  \item Identity: $\mathrm{q}\oplus \mathrm{e}_0=\mathrm{q}=\mathrm{e}_0\oplus \mathrm{q}$ where $\mathrm{e}_0$ is the 0-quaternion $(0, 0, 0, 0)$
-  \item Inverse: $\mathrm{q}\oplus (-q)=\mathrm{q}\ominus \mathrm{q}=\mathrm{e}_0=(-\mathrm{q})\oplus \mathrm{q}$ where the inverse is defined $-\mathrm{q}=(-x, -y, -z, -w)$
+    \item Associativity: $\mathbf{q}_1 \oplus (\mathbf{q}_2 \oplus \mathbf{q}_3) = (\mathbf{q}_1 \oplus \mathbf{q}_2) \oplus \mathbf{q}_3$
+    \item Commutativity: $\mathbf{q}_1 \oplus \mathbf{q}_2 = \mathbf{q}_2 \oplus \mathbf{q}_1$
+    \item Identity: $\mathbf{q} \oplus \mathbf{0} = \mathbf{q} = \mathbf{0} \oplus \mathbf{q}$ where $\mathbf{0}$ is the 0-quaternion $(0, 0, 0, 0)$
+    \item Inverse: $\mathbf{q} \oplus (-\mathbf{q}) = \mathbf{q} \ominus \mathbf{q} = \mathbf{0} =(-\mathbf{q}) \oplus \mathbf{q}$ where the inverse is defined $-\mathbf{q}=(-x, -y, -z, -w)$
   \end{itemize}
 \end{theorem}
 
 \begin{theorem}
-  Unlike addition, quaternions for a \emph{non-commutative} group with multiplication, which gives them the following properties
+  The (nonzero) quaternions form a \emph{non-commutative} group under multiplication, which gives it the following properties
   \begin{itemize}
-  \item Associativity: $\mathrm{q}_1\otimes(\mathrm{q}_2\otimes \mathrm{q}_3) = (\mathrm{q}_1\otimes \mathrm{q}_2) \otimes \mathrm{q}_3$
-  \item Identity: $\mathrm{q}\otimes\mathbf{1}=\mathrm{q}=\mathbf{1}\otimes \mathrm{q}$ where $\mathbf{1}$ is the identity quaternion $(0, 0, 0, 1)$
-  \item Inverse: $\mathrm{q}\otimes \mathrm{q}^{-1}=\mathrm{q}/\mathrm{q}=\mathbf{1}=\mathrm{q}^{-1}\otimes \mathrm{q}$ unless $q$ is the zero quaternion.
+    \item Associativity: $\mathbf{q}_1 \otimes (\mathbf{q}_2 \otimes \mathbf{q}_3) = (\mathbf{q}_1 \otimes \mathbf{q}_2) \otimes \mathbf{q}_3$
+    \item Identity: $\mathbf{q} \otimes \mathbf{1} = \mathbf{q} = \mathbf{1} \otimes \mathbf{q}$ where $\mathbf{1}$ is the identity quaternion $(0, 0, 0, 1)$
+  \item Inverse: $\mathbf{q} \otimes \mathbf{q}^{-1} = \mathbf{1} = \mathbf{q}^{-1} \otimes \mathbf{q}$ unless $q$ is the zero quaternion.
   \end{itemize}
 \end{theorem}
 
 \begin{theorem}
   With the combination of operations, quaternions form a division ring, which adds distributive properties
   \begin{itemize}
-  \item Left distributivity: $\mathrm{q}_1 \otimes \left(\mathrm{q}_2\oplus \mathrm{q}_3\right) = \left(\mathrm{q}_1\otimes \mathrm{q}_2\right) \oplus \left(\mathrm{q}_1\otimes \mathrm{q}_3\right)$
-    \item Right distributivity: $\left(\mathrm{q}_1 \oplus \mathrm{q}_2\right) \otimes \mathrm{q}_3 = \left(\mathrm{q}_1\otimes \mathrm{q}_3\right) \oplus \left(\mathrm{q}_2 \otimes \mathrm{q}_3\right)$
+    \item Left distributivity: $\mathbf{q}_1 \otimes \left(\mathbf{q}_2 \oplus \mathbf{q}_3\right) = \left(\mathbf{q}_1 \otimes \mathbf{q}_2\right) \oplus \left(\mathbf{q}_1 \otimes \mathbf{q}_3\right)$
+    \item Right distributivity: $\left(\mathbf{q}_1 \oplus \mathbf{q}_2\right) \otimes \mathbf{q}_3 = \left(\mathbf{q}_1 \otimes \mathbf{q}_3\right) \oplus \left(\mathbf{q}_2 \otimes \mathbf{q}_3\right)$
   \end{itemize}
 \end{theorem}
 
-\begin{definition}
-	\begin{equation}
-		\mathrm{q}^* = 
-		\begin{pmatrix}
-			x \\
-			y \\
-			z \\
-			w
-		\end{pmatrix}^* =
-		\begin{pmatrix}
-			-x \\
-			-y \\
-			-z \\
-			w
-		\end{pmatrix}
-	\end{equation}
-\end{definition}
-
-
-\begin{theorem}
-	As a convolution algebra, quaternions have the following properties
-	\begin{itemize}
-	\item Conjugate Involution: $(\mathrm{q}^*)^*=\mathrm{q}$
-	\item Conjugate Addition: $(\mathrm{q}_1\oplus\mathrm{q}_2)^*=\mathrm{q}_1^*\oplus\mathrm{q}_2^*$
-	\item Conjugate Multiplication: $(\mathrm{q}_1\otimes\mathrm{q}_2)^*=\mathrm{q}_2^*\otimes\mathrm{q}_1^*$
-	\item $\|\mathrm{q}_1\otimes \mathrm{q}_2\| = \|\mathrm{q}_1\|\|\mathrm{q}_2\|$
-	\end{itemize}
-\end{theorem}
-
-
-\section{Scalar Quaternions}
-This section is overly formal and could probably be left out, still...with our strict rules of quaternions, we will force the subject
-\begin{definition}[Quaternion Scalars]
-  Multiplication between scalars and quaternions is defined in terms of quaternion multiplication. For a scalar $s\in\mathbb{R}$
+\section{The Quaternion Space}
+While the component form is convenient for computation, it obscures the algebraic structure.
+By introducing a basis, quaternion multiplication can be expressed in a more mnemonic and structured form.
+Scalar multiplication equips quaternions with the structure of a vector space over the real numbers.
+\begin{definition}[Quaternion Scaling]
+  Scaling a quaternion by a real number is defined componentwise.
   \begin{equation}
     s
     \begin{pmatrix}
@@ -158,81 +132,32 @@ This section is overly formal and could probably be left out, still...with our s
       w
     \end{pmatrix} =
     \begin{pmatrix}
-      0 \\
-      0 \\
-      0 \\
-      s \\
-    \end{pmatrix}
-    \otimes 
-    \begin{pmatrix}
-      x \\
-      y \\
-      z \\
-      w
-    \end{pmatrix} = 
-    \begin{pmatrix}
       sx \\
       sy \\
       sz \\
       sw
     \end{pmatrix}
   \end{equation}
-  For good measure, lets define addition of a scalar $s\in\mathbb{R}$ and a quaternion $q\in\mathbb{H}$ similarily
-  \begin{equation}
-    s+
-    \begin{pmatrix}
-      x \\
-      y \\
-      z \\
-      w
-    \end{pmatrix} =
-    \begin{pmatrix}
-      0 \\
-      0 \\
-      0 \\
-      s \\
-    \end{pmatrix}
-    \oplus
-    \begin{pmatrix}
-      x \\
-      y \\
-      z \\
-      w
-    \end{pmatrix} = 
-    \begin{pmatrix}
-      x \\
-      y \\
-      z \\
-      s + w
-    \end{pmatrix}
-  \end{equation}
-  With those two definitions, scalars can be readily transformed back and forth between \emph{scalar quaternions}: quaternions of the form $(0, 0, 0, s)$. The algebraic properties of the real field $\left(\mathbb{R}, +, \times\right)$ and the quaternion ring $\mathbb{H}, \oplus, \otimes$ behave similiarly enough, that from here on, we will use the notation for the real field: $+$ and $\times$. 
 \end{definition}
 
-\section{The Quaternion Space}
-%% Vector space:
-%% Associativity of vector addition
-%% Commutativity of vector addition
-%% Vector addition identity
-%% Vector inverse identity
-%% Scaling Associativity a(bv) = (ab)v
-%% Scaling identity
-%% Distributivity of scalar over addition
-%% Distributivity of addition over scaling
-
 \begin{theorem}
-  Quaternions form a vector space with the real field, which means they have the following properties 
+  Quaternions form a vector space over the real numbers, which means they have the following properties
   \begin{itemize}
-  \item $(\mathbb{H}, \oplus)$ forms a commutative group. Details above.
-  \item Compatibility: $s_1(s_2q) = (s_1s_2)q$
-  \item Scalar Identity: $1q = q$ where $1\in\mathbb{R}$
-  \item Distributivity over quaternion addition: $s(q_1+ q_2) = sq_1 + sq_2$
-  \item Distributivity over scalar multiplication: $(s_1+ s_2) q = s_1q + s_2 q$
+  \item $(\mathbb{H}, \oplus)$ forms a commutative group.
+    The details of which are defined in the previous section.
+  \item Compatibility: $s_1(s_2\mathbf{q}) = (s_1s_2)\mathbf{q}$
+  \item Scalar Identity: $1\mathbf{q} = \mathbf{q}$ where $1\in\mathbb{R}$
+  \item Distributivity over quaternion addition: $s(\mathbf{q}_1+ \mathbf{q}_2) = s\mathbf{q}_1 + s\mathbf{q}_2$
+  \item Distributivity over scalar multiplication: $(s_1+ s_2) \mathbf{q} = s_1\mathbf{q} + s_2\mathbf{q}$
   \end{itemize}
+  In addition, quaternion and scalar multiplication are compatible
+  \begin{equation}
+    s \mathbf{q} = (0, 0, 0, s) \otimes \mathbf{q} \nonumber
+  \end{equation}
 \end{theorem}
 
 \begin{definition}
-  In the quaternion vector space we can define four orthogonal unit bases:
+  In the quaternion vector space, define four orthogonal unit basis elements
   \begin{equation}
     \mathbf{i} =
     \begin{pmatrix}
@@ -261,214 +186,321 @@ This section is overly formal and could probably be left out, still...with our s
       0 \\
       0 \\
       1
-    \end{pmatrix}
+    \end{pmatrix}.
   \end{equation}
-  Every quaternion can be described in these unit bases
+  Every quaternion can be described in this basis
   \begin{equation}
-    q = x \mathbf{i} + y \mathbf{j} + z \mathbf{z} + w \mathbf{1}
+    \mathbf{q} = x \mathbf{i} + y \mathbf{j} + z \mathbf{k} + w \mathbf{1}
   \end{equation}
-  Since we previously defined the addition of a scalar with a quaternion the $\mathbf{1}$ can also be dropped, i.e. $w+\mathrm{q} = w\mathbf{1} +\mathrm{q}$ for all scalars $w\in\mathbb{R}$
+  This representation is equivalent to the component form $(x, y, z, w)$.
 \end{definition}
 
 \begin{theorem}
-  The definition of quaternion multiplication in equation \ref{eqn:multiplication} is unintuitive and hard to remember. Historically quaternions were used to extend complex numbers and as such, using the bases definition above, the complex $i^2=-1$ can be extended for quaternion hypercomplex numbers
+  The definition of quaternion multiplication in equation \ref{eqn:multiplication} is not particularly mnemonic.
+  Historically quaternions were used to extend complex numbers and as such, using the basis definition above, the complex $i^2=-1$ can be extended for quaternion hypercomplex numbers
   \begin{equation}
-    \mathbf{ii} = \mathbf{jj} = \mathbf{kk} = \mathbf{ijk} = -\mathbf{1}
+    \mathbf{i}^2 = \mathbf{j}^2 = \mathbf{k}^2 = \mathbf{ijk} = -\mathbf{1}
   \end{equation}
-  Please note, some papers do not use this definition and therefor have a different definition of quaternions. The math can all work out the same at the end, but be wary swapping between papers could mean a missed sign or swapped commutativity.
+  Some papers use different definitions of unit bases, which would lead to a different equation \ref{eqn:multiplication}.
+  The algebraic structure remains equivalent across differing conventions, but comparing sources can introduce sign errors or apparent changes in commutativity.
 \end{theorem}
+While this basis formulation is compact and mnemonic, an equivalent formulation in terms of vector operations is more useful for geometric interpretation and computation.
 
-\section{Vector Quaternions}
-In the previous section we said quaternions form a vector space, so technically every quaternion is a 4-vector. But in practice, quaternions are lovely because of how they work alongside 3-vectors.
+\section{Pure Quaternions}
+In the previous section we said quaternions form a vector space, so technically every quaternion is a 4-vector.
+In practice, quaternions are particularly useful because of how they interact with 3-vectors.
 \begin{definition}[Vector Quaternion]
-  Quaternions behave like vectors with scalars attached. More formally, every quaternion can be described by a \emph{vector} or \emph{pure quaternion} $\mathbf{v}=\left(x, y, z, 0\right)$ plus a scalar quaternion $s=\left(0,0,0,s\right)$: either $\mathbf{v}+s$ or, like below, $(\mathbf{v}, s)$. Then addition can be defined as
+  Quaternions can be interpreted as vectors with an attached scalar component.
+  Using a slight abuse of notation, every quaternion can be decomposed into a \emph{vector} (or \emph{pure quaternion}) $\vec{v} = \left(x, y, z, 0\right)$ and a scalar quaternion $s = \left(0,0,0,s\right)$: either $\vec{v}+s$ or, like below, $(\vec{v}, s)$.
+  Addition is defined as
   \begin{equation}
     \begin{pmatrix}
-      \mathbf{v}_1 \\
+      \vec{v}_1 \\
       s_1
     \end{pmatrix}
     \oplus
     \begin{pmatrix}
-      \mathbf{v}_2 \\
+      \vec{v}_2 \\
       s_2
     \end{pmatrix}
     =
     \begin{pmatrix}
-      \mathbf{p} + \mathbf{q}\\
-			p_0 + q_0
-    \end{pmatrix}
+      \vec{v}_1 + \vec{v}_2\\
+      s_1 + s_2
+    \end{pmatrix} \nonumber
   \end{equation}
   and multiplication can be defined from the vector dot and cross product
   \begin{equation}
     \begin{pmatrix}
-      \mathbf{v}_1 \\
+      \vec{v}_1 \\
       s_1
     \end{pmatrix}
     \otimes
     \begin{pmatrix}
-      \mathbf{v}_2 \\
+      \vec{v}_2 \\
       s_2
     \end{pmatrix}
     =
     \begin{pmatrix}
-      s_1\mathbf{v}_2 + s_2\mathbf{v}_1 + \mathbf{v}_1\times \mathbf{v}_2 \\
-      s_1s_2 - \mathbf{v}_1\cdot \mathbf{v}_2
-    \end{pmatrix}
+      s_1\vec{v}_2 + s_2\vec{v}_1 + \vec{v}_1 \times \vec{v}_2 \\
+      s_1s_2 - \vec{v}_1 \cdot \vec{v}_2
+    \end{pmatrix} \nonumber
   \end{equation}
-  For pure quaternions (aka vectors), that multiplication becomes
-  \begin{equation}
-    \mathbf{v}_1\otimes\mathbf{v}_2 =
-    \begin{pmatrix}
-      \mathbf{v}_1 \times \mathbf{v}_2\\
-      -\mathbf{v}_1\cdot \mathbf{v}_2
-    \end{pmatrix}
-  \end{equation}
-  The scalar part is minus the dot product of the two vectors and the vector part is the cross product--another way to re-derive equation \ref{eqn:multiplication} when on a subway with no internet. If we introduce some new abusive notation we can define the dot product as
+  For pure quaternions (a.k.a. vectors), that multiplication becomes
   \begin{equation}
     \begin{pmatrix}
-      \mathbf{v}_1 \\
-      s_1
-    \end{pmatrix}
-    \cdot
-    \begin{pmatrix}
-      \mathbf{v}_2 \\
-      s_2
-    \end{pmatrix}
-    =
-    \begin{pmatrix}
-      0 \\
-      \mathbf{v}_1 \cdot \mathbf{v}_2
-    \end{pmatrix}
-  \end{equation}
-  and cross product of two quaternions as
-  \begin{equation}
-    \begin{pmatrix}
-      \mathbf{v}_1 \\
-      s_1
-    \end{pmatrix}
-    \times
-    \begin{pmatrix}
-      \mathbf{v}_2 \\
-      s_2
-    \end{pmatrix}
-    =
-    \begin{pmatrix}
-      \mathbf{v}_1 \times \mathbf{v}_2 \\
+      \vec{v}_1 \\
       0
     \end{pmatrix}
+    \otimes
+    \begin{pmatrix}
+      \vec{v}_2 \\
+      0
+    \end{pmatrix} =
+    \begin{pmatrix}
+      \vec{v}_1 \times \vec{v}_2\\
+      -\vec{v}_1 \cdot \vec{v}_2
+    \end{pmatrix} \nonumber
   \end{equation}
-  Then the quaternion product can be written as
+  This shows that quaternion multiplication decomposes into a combination of the familiar dot and cross products on $\mathbb{R}^3$.
+  The scalar part is minus the dot product of the two vectors and the vector part is the cross product, another way to re-derive equation \ref{eqn:multiplication} when on a subway with no internet.
 \end{definition}
 
-\begin{theorem}[Quaternion Commutator]
-  Quaternion multiplication is not commutative. Its commutator is given by
+\begin{theorem}
+  Quaternion multiplication is not commutative.
+  The commutator is defined by
   \begin{equation}
-    \mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 = 2 \mathrm{q}_1 \times \mathrm{q}_2 \label{eqn:commutator}
+    \left[\mathbf{q}_1, \mathbf{q}_2\right] := \mathbf{q}_1 \otimes \mathbf{q}_2 - \mathbf{q}_2 \otimes \mathbf{q}_1.
+  \end{equation}
+  It yields pure quaternions and is given by
+  \begin{equation}
+    \left[
+    \begin{pmatrix}
+      \vec{v}_1 \\
+      s_1
+    \end{pmatrix} ,
+    \begin{pmatrix}
+      \vec{v}_2 \\
+      s_2
+    \end{pmatrix}
+    \right] =
+    \begin{pmatrix}
+      \vec{v}_1 \\
+      s_1
+    \end{pmatrix} \otimes
+    \begin{pmatrix}
+      \vec{v}_2 \\
+      s_2
+    \end{pmatrix} -
+    \begin{pmatrix}
+      \vec{v}_2 \\
+      s_2
+    \end{pmatrix} \otimes
+    \begin{pmatrix}
+      \vec{v}_1 \\
+      s_1
+    \end{pmatrix} =
+    \begin{pmatrix}
+      2\vec{v}_1 \times \vec{v}_2 \\
+      0
+    \end{pmatrix}. \label{eqn:commutator}
   \end{equation}
 \end{theorem}
 \begin{proof}
-  For any two quaternions $\mathrm{q}_1=(\mathbf{v}_1, s_1)$ and $\mathrm{q}_2=(\mathbf{v}_2, s_2)$ be any two quaternions. Then their commutator expands to
+  For $\mathbf{q}_1=(\vec{v}_1, s_1)$ and $\mathbf{q}_2=(\vec{v}_2, s_2)$, the commutator expands to
   \begin{equation}
-    \mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 =s_1 \mathrm{q}_2 + s_2 \mathrm{q}_1 +
     \begin{pmatrix}
-      \mathbf{v}_1\times\mathbf{v}_2 \\
-      \mathbf{v}_1\cdot\mathbf{v}_2
-    \end{pmatrix}
-    - s_2 \mathrm{q}_1 - s_1 \mathrm{q}_2 -
+      \vec{v}_1 \\
+      s_1
+    \end{pmatrix} \otimes
     \begin{pmatrix}
-      \mathbf{v}_2\times\mathbf{v}_1 \\
-      \mathbf{v}_2\cdot\mathbf{v}_1
-    \end{pmatrix}
+      \vec{v}_2 \\
+      s_2
+    \end{pmatrix} -
+    \begin{pmatrix}
+      \vec{v}_2 \\
+      s_2
+    \end{pmatrix} \otimes
+    \begin{pmatrix}
+      \vec{v}_1 \\
+      s_1
+    \end{pmatrix} =
+    \begin{pmatrix}
+      s_1\vec{v}_2 + s_2\vec{v}_1 + \vec{v}_1 \times \vec{v}_2 \\
+      s_1s_2 - \vec{v}_1 \cdot \vec{v}_2
+    \end{pmatrix} -
+    \begin{pmatrix}
+      s_2\vec{v}_1 + s_1\vec{v}_2 + \vec{v}_2 \times \vec{v}_1 \\
+      s_2s_1 - \vec{v}_2 \cdot \vec{v}_1
+    \end{pmatrix} \nonumber
   \end{equation}
-  Since only the cross product is \emph{not} commutative the commutator reduces down to
+  Since only the cross product is \emph{not} commutative, the commutator reduces down to
   \begin{equation}
-    \mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 =
     \begin{pmatrix}
-      \mathbf{v}_1\times\mathbf{v}_2-\mathbf{v}_2\times\mathbf{v}_1 \\
+      \vec{v}_1 \\
+      s_1
+    \end{pmatrix} \otimes
+    \begin{pmatrix}
+      \vec{v}_2 \\
+      s_2
+    \end{pmatrix} -
+    \begin{pmatrix}
+      \vec{v}_2 \\
+      s_2
+    \end{pmatrix} \otimes
+    \begin{pmatrix}
+      \vec{v}_1 \\
+      s_1
+    \end{pmatrix} =
+    \begin{pmatrix}
+      \vec{v}_1\times\vec{v}_2-\vec{v}_2\times\vec{v}_1 \\
       0
-    \end{pmatrix}
+    \end{pmatrix} \nonumber
   \end{equation}
-  But, because  the cross product is \emph{anti-}commutative
+  But, because the cross product is \emph{anti-}commutative
   \begin{equation}
-    \mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 =
     \begin{pmatrix}
-      2\mathbf{v}_1\times\mathbf{v}_2\\
+      \vec{v}_1 \\
+      s_1
+    \end{pmatrix} \otimes
+    \begin{pmatrix}
+      \vec{v}_2 \\
+      s_2
+    \end{pmatrix} -
+    \begin{pmatrix}
+      \vec{v}_2 \\
+      s_2
+    \end{pmatrix} \otimes
+    \begin{pmatrix}
+      \vec{v}_1 \\
+      s_1
+    \end{pmatrix} =
+    \begin{pmatrix}
+      2\vec{v}_1\times\vec{v}_2\\
       0
-    \end{pmatrix}
-  \end{equation}
-  If we allow the abuse of notation: the quaternion cross product is equal a pure quaternion where the vector part is the cross products of the vector part of the two quaternions, then
-  \begin{equation}
-    \mathrm{q}_1\otimes\mathrm{q}_2 - \mathrm{q}_2 \otimes \mathrm{q}_1 = 2 \mathrm{q}_1\times \mathrm{q}_2
+    \end{pmatrix} \nonumber
   \end{equation}
 \end{proof}
 
-
-\section{Rotation Group}
-% Closure
-% Associativity
-% Identity
-% Inverse
-
-\begin{theorem}
-  Quaternions with norm $\|\mathrm{q}\|=1$ form a subgroup with the quaternion product.
-  \begin{itemize}
-  \item Closure: If $\|\mathrm{q}_1\|=1$ and $\|\mathrm{q}_2\|=1$ then $\|\mathrm{q}_1\mathrm{q}_2\|=1$
-  \item Identity: The identity quaternion is a versor $\|\mathbf{1}\|=1$
-  \item Inverse: The inverse of a versor is its conjugate $\mathrm{q}\mathrm{q}^*=1=\mathrm{q}^*\mathrm{q}$
-  \end{itemize}
-\end{theorem}
-
+\section{Unit Quaternion Subgroup}
+The algebra of quaternions admits a natural notion of conjugation, which in turn defines a quadratic quantity known as the quadrance.
+Together, these structures endow $\mathbb{H}$ with the structure of a \emph{composition algebra}, in which the quadrance is multiplicative under quaternion multiplication.
+This multiplicative property allows us to identify a distinguished subset of quaternions whose quadrance is unity.
+As we will see, this subset forms a group under quaternion multiplication and will play a central role in describing rotations in three-dimensional space.
 
 \begin{definition}
-  Quaternions can be used to describe rotations in space. A versor rotates between reference frames $R:A\to B$. Without describing $\mathbf{v}\in\mathbb{R}^3$ in either $A$ or $B$ basis:
+  For a quaternion $\mathbf{q}=(\vec{v}, s)$, its \emph{conjugate} is given by
   \begin{equation}
-    \begin{pmatrix}
-      \mathbf{v} \cdot \mathbf{\hat{b}}_x \\
-      \mathbf{v} \cdot \mathbf{\hat{b}}_y \\
-      \mathbf{v} \cdot \mathbf{\hat{b}}_z
-    \end{pmatrix}
-    = \mathrm{q}_{A2B} \otimes
-    \begin{pmatrix}
-      \mathbf{v} \cdot \mathbf{\hat{a}}_x \\
-      \mathbf{v} \cdot \mathbf{\hat{a}}_y \\
-      \mathbf{v} \cdot \mathbf{\hat{a}}_z
-    \end{pmatrix}
-    \otimes \mathrm{q}_{A2B}^*
+    \mathbf{q}^* := (-\vec{v}, s)
+  \end{equation}
+\end{definition}
+
+\begin{definition}
+  The \emph{quadrance} of a quaternion is the map
+  \begin{equation}
+    Q: \mathbb{H} \to \mathrm{Re}(\mathbb{H}) \cong \mathbb{R}
+  \end{equation}
+  defined by
+  \begin{equation}
+    Q(\mathbf{q}) := \mathbf{q} \otimes \mathbf{q}^*.
+  \end{equation}
+  Or, in coordinate form
+  \begin{equation}
+    Q(x\mathbf{i}+y\mathbf{j}+z\mathbf{k}+w) = x^2 + y^2 + z^2 + w^2.
   \end{equation}
 \end{definition}
 
 \begin{theorem}
-  These transformations also form a group: the orthogonal group. If $R(\mathrm{q}, \mathbf{v})=\mathrm{q}\mathbf{v}\mathrm{q}^*$
+  With these new definitions, the quaternion algebra $\mathbb{H}$ forms a composition algebra, which has the following properties:
   \begin{itemize}
-  \item Orthogonality: For all rotations $\|\mathbf{v}\|=\|R(\mathrm{q}, \mathbf{v})\|$
-  \item Cover: For all vectors where $\|\mathbf{u}\|=\|\mathbf{v}\|$ there is a rotation $\mathbf{u}=R(\mathrm{q}, \mathbf{v})$
-  \item Double Cover: Rotations are not unique $R(\mathrm{q},\mathbf{v})=R(-\mathrm{q},\mathbf{v})$
-  \item Closure: $R(\mathrm{q}_1, R(\mathrm{q}_2, \mathbf{v})) = R(\mathrm{q}_1\otimes\mathrm{q}_2, \mathbf{v})$
-  \item Identity: The identity quaternion forms the identity rotation $\mathbf{v} = R(\mathbf{1}, \mathbf{v})$
-  \item Inverse: $R(\mathrm{q}, R(\mathrm{q}^*, \mathbf{v})) = R(\mathbf{1}, \mathbf{v})$
+    \item Conjugation Involution: $\left(\mathbf{q}^*\right)^* = \mathbf{q}$,
+    \item Conjugation Reverses Multiplication: $(\mathbf{p}\otimes\mathbf{q})^*=\mathbf{q}^*\otimes\mathbf{p}^*$,
+    \item Quadrance Nondegeneracy: $Q(\mathbf{q})=0 \Leftrightarrow \mathbf{q} = \mathbf{0}$,
+    \item Quadrance Compatibility with Multiplication: $Q(\mathbf{p})Q(\mathbf{q})=Q(\mathbf{p}\otimes \mathbf{q})$.
   \end{itemize}
 \end{theorem}
 
+\begin{definition}
+  The \emph{unit quaternions}, or \emph{versors}, form the subgroup $\mathrm{Spin}(3) \subset (\mathbb{H}\setminus\{\mathbf{0}\}, \otimes)$, is the set of quaternions with quadrance equal to $1$.
+  \begin{equation}
+    \mathrm{Spin}(3) := \left\{\mathbf{q} \in \mathbb{H} : Q(\mathbf{q}) = 1\right\}
+  \end{equation}
+\end{definition}
+
+\begin{theorem}
+  This group has the following group properties
+  \begin{itemize}
+    \item Closure: If $Q(\mathbf{p})=1$ and $Q(\mathbf{q})=1$, then $Q(\mathbf{p}\otimes\mathbf{q})=1$.
+    \item Identity: The identity quaternion is a versor $\mathbf{1}\in\mathrm{Spin}(3)$.
+    \item Inverse: The inverse of a versor is the conjugate which is also a versor $\mathbf{q} \otimes \mathbf{q}^* = \mathbf{1}$.
+  \end{itemize}
+\end{theorem}
+
+\section{Quaternion Rotation Group}
+
+\begin{definition}
+  Unit quaternions act on vectors by conjugation, producing rotations in three-dimensional space.
+  These transformations form the rotation group.
+  \begin{equation}
+    \mathrm{Rot}(3) := \{\mathrm{R}_{\mathbf{q}}:\mathrm{Im}(\mathbb{H})\to\mathrm{Im}(\mathbb{H}) :\mathbf{q}\in\mathrm{Spin}(3), \vec{v} \mapsto \mathbf{q}\otimes (\vec{v}, 0) \otimes\mathbf{q}^*\}
+  \end{equation}
+\end{definition}
+
+\begin{theorem}
+  These transformations form a group
+  \begin{itemize}
+    \item Closure: Composition is quaternion multiplication $R_\mathbf{p} \circ R_\mathbf{q} = R_{\mathbf{p}\otimes\mathbf{q}}$
+    \item Identity: The identity quaternion forms the identity rotation $\vec{v} = R_\mathbf{1}(\vec{v})$
+    \item Inverse: The conjugate forms the inverse rotation $R_\mathbf{q} \circ R_{\mathbf{q}^*} = R_\mathbf{1}$
+  \end{itemize}
+\end{theorem}
+
+\begin{theorem}
+  Quaternion rotation preserves the structure of $\mathbb{R}^3$
+  \begin{itemize}
+    \item Preserves Quadrance: $Q(R_\mathbf{q}(\vec{v}))=Q(\vec{v})$
+    \item Preserves the Dot Product: $\vec{u} \cdot \vec{v}=R_\mathbf{q}(\vec{u}) \cdot R_\mathbf{q}(\vec{v})$
+    \item Preserves the Cross Product: $R_\mathbf{q}\left(\vec{u}\times\vec{v}\right)=R_\mathbf{q}(\vec{u})\times R_\mathbf{q}(\vec{v})$.
+  \end{itemize}
+\end{theorem}
+
+\begin{theorem}
+  Any vector can be rotated to any other vector of the same quadrance,
+  \begin{equation}
+    Q(\vec{u})=Q(\vec{v}) \Rightarrow \exists \mathbf{q}\in \mathrm{Spin}(3)\text{ such that }\vec{u}=R_\mathbf{q}(\vec{v}).
+  \end{equation}
+\end{theorem}
+
+\begin{theorem}
+  However, these rotations are not unique,
+  \begin{equation}
+    R_\mathbf{q} = R_{-\mathbf{q}}.
+  \end{equation}
+  Thus unit quaternions provide a double cover of the rotation group.
+\end{theorem}
 
 \begin{theorem}[Quaternion to Matrix]
   Every rotation $\mathrm{A}\to\mathrm{B}$ can be described as both a quaternion and a rotation matrix
   \begin{equation}
-    R(\mathrm{q}_{A2B}, \mathbf{v}) = R_{A2B}\left(\mathbf{v}\right)
+    R\vec{v} = R_\mathbf{q} \left(\vec{v}\right)
   \end{equation}
   that rotation matrix also collects the dot products of the rotation.
   
   \begin{tabular}{c|ccc}
-    $R_{A2B}$ & $\hat{\mathbf{a}}_x$ & $\hat{\mathbf{a}}_y$ & $\hat{\mathbf{a}}_z$ \\
+    $R$ & $\hat{a}_x$ & $\hat{a}_y$ & $\hat{a}_z$ \\
     \hline
-    $\hat{\mathbf{b}}_x$ & $x^2-y^2-z^2+w^2$ & $2xy-2zw$ & $2xz+2yw$ \\
-    $\hat{\mathbf{b}}_y$ & $2xy+2zw$ & $-x^2+y^2-z^2+w^2$ & $-2xw+2yz$ \\
-    $\hat{\mathbf{b}}_z$ & $2xz-2wy$ & $2xw+2yz$ & $-x^2-y^2+z^2+w^2$
+    $\hat{b}_x$ & $1-2(y^2+z^2)$ & $2(xy-zw)$ & $2(xz+yw)$ \\
+    $\hat{b}_y$ & $2(xy+zw)$ & $1-2(x^2+z^2)$ & $2(yz-xw)$ \\
+    $\hat{b}_z$ & $2(xz-wy)$ & $2(xw+yz)$ & $1-2(x^2+y^2)$
   \end{tabular}\centering
 \end{theorem}
 \begin{proof}
   $R$ can be formed from algebra.
   \begin{equation}
-    R
+    \begin{pmatrix}
+      R & \vec{0}^\top \\
+      \vec{0} & 0
+    \end{pmatrix}
     \begin{pmatrix}
       v_x \\
       v_y \\
@@ -494,176 +526,103 @@ In the previous section we said quaternions form a vector space, so technically 
       -y \\
       -z \\
       w
-    \end{pmatrix}
+    \end{pmatrix} \nonumber
+  \end{equation}
+  Expanding and collecting like terms
+  \begin{equation}
+    R =
+    \begin{pmatrix}
+      x^2-y^2-z^2+w^2 & 2xy-2zw & 2xz+2yw \\
+      2xy+2zw & -x^2+y^2-z^2+w^2 & -2xw+2yz \\
+      2xz-2wy & 2xw+2yz & -x^2-y^2+z^2+w^2
+    \end{pmatrix} \nonumber
+  \end{equation}
+  Since this is a unit quaternion, its quadrance is equal to one: $1=x^2+y^2+z^2+w^2$.
+  \begin{equation}
+    R =
+    \begin{pmatrix}
+      1-2(y^2+z^2) & 2(xy-zw) & 2(xz+yw) \\
+      2(xy+zw) & 1-2(x^2+z^2) & 2(yz-xw) \\
+      2(xz-wy) & 2(xw+yz) & 1-2(x^2+y^2)
+    \end{pmatrix} \nonumber
   \end{equation}
 \end{proof}
 
 \begin{theorem}
-  If frame $B$ is rotating in frame $A$ at a constant angular velocity, then the rate of change of the quaternion is given by
+  Let $\mathbf{q}=(\vec{q}, q_0)$ be a unit quaternion. The rotated vector $\vec{v}'$ can be computed as
   \begin{equation}
-    \mathrm{\dot{q}} = \frac{1}{2}
-    \begin{pmatrix}
-      \boldsymbol\omega\\
-      0
-    \end{pmatrix}
-    \otimes \mathrm{q}
+    \vec{v}' = \vec{v} + 2q_0\vec{q}\times\vec{v} + 2\vec{q}\times\left(\vec{q}\times\vec{v}\right).
   \end{equation}
-  where $\boldsymbol\omega\in\mathbb{R}^3$ is the angular velocity of frame $B$ in $A$.
 \end{theorem}
 \begin{proof}
-  A unit quaternion $\mathrm{q}$ describes a rotation of a vector via
+  Expanding the rotation equation into its scalar and vector components
   \begin{equation}
+    R_\mathbf{q}(\vec{v}) = \mathbf{q} \otimes (\vec{v}, 0) \otimes \mathbf{q}^* =
     \begin{pmatrix}
-      \mathbf{v}'\\
-      0
-    \end{pmatrix}
-    = \mathrm{q} \otimes
+      \vec{q} \\
+      q_0
+    \end{pmatrix} \otimes
     \begin{pmatrix}
-      \mathbf{v} \\
+      \vec{v} \\
       0
-    \end{pmatrix}
-    \otimes \mathrm{q}^*
+    \end{pmatrix} \otimes
+    \begin{pmatrix}
+      -\vec{q} \\
+      q_0
+    \end{pmatrix} \nonumber
   \end{equation}
-  where $\mathbf{v}$ and $\mathbf{v}'$ is that vector described in a basis $A$ and $B$ respectively.
-  Let $\boldsymbol\omega$ be the angular velocity of reference frame $B$ in $A$. Then by the Transport Theorem, the derivative in basis $A$ is
+  Expanding the multiplication
+  \begin{align}
+    R_\mathbf{q} (\vec{v}) &=
+    \begin{pmatrix}
+      \vec{q} \\
+      q_0
+    \end{pmatrix} \otimes
+    \begin{pmatrix}
+      -\vec{v}\times\vec{q} + q_0\vec{v} \\
+      \vec{v}\cdot\vec{q}
+    \end{pmatrix} \nonumber \\
+    &=
+    \begin{pmatrix}
+      \vec{q}\times\left(-\vec{v}\times\vec{q}\right) + q_0\vec{q}\times\vec{v} + (\vec{v}\cdot\vec{q})\vec{q} - q_0\vec{v}\times\vec{q} + q_0^2\vec{v} \\
+      \vec{q}\cdot(\vec{v}\times\vec{q}) - q_0\vec{q}\cdot\vec{v} + q_0\vec{v}\cdot\vec{q}
+    \end{pmatrix} \nonumber
+  \end{align}
+  Since the dot product is symmetric, and the cross product is antisymmetric, we can combine some like terms
   \begin{equation}
-    \frac{d}{dt} \mathbf{v}' = \frac{d}{dt} \mathbf{v} + \boldsymbol\omega \times \mathbf{v}'
+     R_\mathbf{q} (\vec{v}) =
+    \begin{pmatrix}
+      q_0^2\vec{v} + (\vec{v}\cdot\vec{q})\vec{q} + 2q_0\vec{q}\times\vec{v} + \vec{q}\times\left(\vec{q}\times\vec{v}\right) \\
+      \vec{q} \cdot (\vec{v}\times\vec{q})
+    \end{pmatrix} \nonumber
   \end{equation}
-  affix $\mathbf{v}$ in $A$ (i.e. $\frac{d}{dt}\mathbf{v}=0$).
-  Using that and expanding the derivative of $\mathbf{v}'$ gives
+  Since $\mathbf{q}$ is a unit quaternion $q_0^2+\vec{q}\cdot\vec{q}=1$
   \begin{equation}
-    \mathrm{\dot{q}} \otimes
+     R_\mathbf{q} (\vec{v}) =
     \begin{pmatrix}
-      \mathbf{v} \\
-      0
-    \end{pmatrix}
-    \otimes \mathrm{q}^* + \mathrm{q} \otimes
-    \begin{pmatrix}
-      \mathbf{v} \\
-      0
-    \end{pmatrix}
-    \otimes \mathrm{\dot{q}^*} =
-    \begin{pmatrix}
-      \boldsymbol\omega\times\mathbf{v}' \\
-      0
-    \end{pmatrix}
+      \vec{v}-(\vec{q}\cdot\vec{q})\vec{v} + (\vec{v}\cdot\vec{q})\vec{q} + 2q_0\vec{q}\times\vec{v} + \vec{q}\times\left(\vec{q}\times\vec{v}\right)\\
+      \vec{q}\cdot(\vec{v}\times\vec{q})
+    \end{pmatrix} \nonumber
   \end{equation}
-  Or in terms of $\mathbf{v}'$
+  Using the identity $\vec{a}\cdot(\vec{a}\times\vec{b})=0$ and the triple cross product formula $\vec{a}\times(\vec{b}\times\vec{c})=(\vec{c}\cdot\vec{a})\vec{b}-(\vec{a}\cdot\vec{b})\vec{c}$
   \begin{equation}
-    \mathrm{\dot{q}}\otimes\mathrm{q^*}\otimes
-    \begin{pmatrix}
-      \mathbf{v}'\\
+    R_\mathbf{q}(\vec{v}) = \begin{pmatrix}
+      \vec{v}+2q_0\vec{q}\times\vec{v}+2\vec{q}\times\left(\vec{q}\times\vec{v}\right) \\
       0
-    \end{pmatrix}
-    +
-    \begin{pmatrix}
-      \mathbf{v}'\\
-      0
-    \end{pmatrix}
-    \otimes \mathrm{q} \otimes \mathrm{\dot{q}^*} =
-    \begin{pmatrix}
-      \boldsymbol\omega\times\mathbf{v}' \\
-      0
-    \end{pmatrix}
+    \end{pmatrix} \nonumber
   \end{equation}
-  Since the conjugate is the inverse of the quaternion
+  The vector part of this new quaternion is the rotated vector $\vec{v}'$
   \begin{equation}
-    \mathrm{q}\otimes\mathrm{q^*} = 1 \implies
-    \mathrm{\dot{q}} \otimes\mathrm{q^*}+\mathrm{q}\otimes\mathrm{\dot{q}^*} = 0 \implies
-    \left(\mathrm{\dot{q}}\otimes\mathrm{q}^*\right)^*=-\mathrm{\dot{q}}\otimes \mathrm{q^*}
-  \end{equation}
-  which implies that $\mathrm{\dot{q}}\otimes\mathrm{q}^*$ is a pure quaternion (For a quaternion $\mathrm{p}$, $-\mathrm{p}=\mathrm{p^*}$ is only true for a quaternion with a zero scalar part). Let $(\mathbf{u}, 0) = \mathrm{\dot{q}}\otimes\mathrm{q}^*=-\mathrm{q}\otimes\mathrm{\dot{q}^*}$, then
-  \begin{equation}
-    \begin{pmatrix}
-      \mathbf{u} \\
-      0
-    \end{pmatrix}
-    \otimes
-    \begin{pmatrix}
-      \mathbf{v}'\\
-      0
-    \end{pmatrix}
-    -
-    \begin{pmatrix}
-      \mathbf{v}'\\
-      0
-    \end{pmatrix}
-    \otimes
-    \begin{pmatrix}
-      \mathbf{u}\\
-      0
-    \end{pmatrix}
-    =
-    \begin{pmatrix}
-      \boldsymbol\omega\times\mathbf{v}'\\
-      0
-    \end{pmatrix}
-  \end{equation}
-  The left-hand side is the quaternion commutator. Expanded it becomes
-  \begin{equation}
-    \begin{pmatrix}
-      \mathbf{u} \\
-      0
-    \end{pmatrix}
-    \otimes
-    \begin{pmatrix}
-      \mathbf{v}'\\
-      0
-    \end{pmatrix}
-    -
-    \begin{pmatrix}
-      \mathbf{v}'\\
-      0
-    \end{pmatrix}
-    \otimes
-    \begin{pmatrix}
-      \mathbf{u}\\
-      0
-    \end{pmatrix}
-    =
-    \begin{pmatrix}
-      \mathbf{u}\times\mathbf{v}'-\mathbf{v}'\times\mathbf{u} \\
-      \mathbf{u}\cdot\mathbf{v}'-\mathbf{v}'\cdot\mathbf{u}
-    \end{pmatrix}
-    =
-    \begin{pmatrix}
-      2\mathbf{u}\times\mathbf{v}'\\
-      0
-    \end{pmatrix}
-  \end{equation}
-  The vector part of the equation then becomes
-  \begin{equation}
-    2\mathbf{u}\times\mathbf{v}' = \boldsymbol\omega\times\mathbf{v}'
-  \end{equation}
-  which only implies that $(2\mathbf{u}-\boldsymbol\omega)\times\mathbf{v}' = \mathbf{0}$.
-  The relationship $2\mathbf{u}=\boldsymbol\omega$ is true only if $2\mathbf{u}\cdot\mathbf{v}'=\boldsymbol\omega\cdot\mathbf{v}'$.
-  If the relationship is true then
-  \begin{equation}
-    2\mathrm{\dot{q}}\otimes\mathrm{q^*} =
-    \begin{pmatrix}
-      \boldsymbol\omega \\
-      0
-    \end{pmatrix}
-  \end{equation}
-  Or re-arranging
-  \begin{equation}
-    \mathrm{\dot{q}} = \frac{1}{2}
-    \begin{pmatrix}
-      \boldsymbol\omega \\
-      0
-    \end{pmatrix}
-    \otimes \mathrm{q}
+    \vec{v}' = \vec{v}+2q_0\vec{q}\times\vec{v}+2\vec{q}\times\left(\vec{q}\times\vec{v}\right). \nonumber
   \end{equation}
 \end{proof}
 
-Linear interpolation
-\begin{equation}
-  q_{k+1} = \frac{1}{2}q_k\boldsymbol\omega\Delta t + q_k 
-\end{equation}
+%% \section{Quaternion Rotation Algebra}
+%% TODO
+%% This section will be about integration on SO(3)
 
-Spherical interpolation?
-\begin{equation}
-  \mathrm{q}_{k+1} = \exp\left(\frac{1}{2} \boldsymbol\omega\Delta t\right)q_k
-\end{equation}
+%% \section{Quaternion Kinematic Algebra}
+%% TODO
+%% This section will be about integration on SE(3)
 
 \end{document}
