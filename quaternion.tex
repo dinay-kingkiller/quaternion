@@ -197,7 +197,7 @@ Scalar multiplication equips quaternions with the structure of a vector space ov
 
 \begin{theorem}
   The definition of quaternion multiplication in equation \ref{eqn:multiplication} is not particularly mnemonic.
-  Historically quaternions were used to extend complex numbers and as such, using the bases definition above, the complex $i^2=-1$ can be extended for quaternion hypercomplex numbers
+  Historically quaternions were used to extend complex numbers and as such, using the basis definition above, the complex $i^2=-1$ can be extended for quaternion hypercomplex numbers
   \begin{equation}
     \mathbf{i}^2 = \mathbf{j}^2 = \mathbf{k}^2 = \mathbf{ijk} = -\mathbf{1}
   \end{equation}
@@ -272,7 +272,7 @@ In practice, quaternions are particularly useful because of how they interact wi
   \begin{equation}
     \left[\mathbf{q}_1, \mathbf{q}_2\right] := \mathbf{q}_1 \otimes \mathbf{q}_2 - \mathbf{q}_2 \otimes \mathbf{q}_1.
   \end{equation}
-  It yields pure quaterions and is given by
+  It yields pure quaternions and is given by
   \begin{equation}
     \left[
     \begin{pmatrix}
@@ -421,7 +421,7 @@ As we will see, this subset forms a group under quaternion multiplication and wi
 \end{theorem}
 
 \begin{definition}
-  The \emph{unit quaternion}, or \emph{versor}, subgroup $\mathrm{Spin}(3) \subset (\mathbb{H}, \otimes)$, is the set of quaternions with quadrance equal to 1.
+  The \emph{unit quaternions}, or \emph{versors}, form the subgroup $\mathrm{Spin}(3) \subset (\mathbb{H}\setminus\{\mathbf{0}\}, \otimes)$, is the set of quaternions with quadrance equal to $1$.
   \begin{equation}
     \mathrm{Spin}(3) := \left\{\mathbf{q} \in \mathbb{H} : Q(\mathbf{q}) = 1\right\}
   \end{equation}
@@ -440,7 +440,7 @@ As we will see, this subset forms a group under quaternion multiplication and wi
 
 \begin{definition}
   Unit quaternions act on vectors by conjugation, producing rotations in three-dimensional space.
-  The set of transforms of the form below form the rotation group.
+  These transformations form the rotation group.
   \begin{equation}
     \mathrm{Rot}(3) := \{\mathrm{R}_{\mathbf{q}}:\mathrm{Im}(\mathbb{H})\to\mathrm{Im}(\mathbb{H}) :\mathbf{q}\in\mathrm{Spin}(3), \vec{v} \mapsto \mathbf{q}\otimes (\vec{v}, 0) \otimes\mathbf{q}^*\}
   \end{equation}
@@ -450,20 +450,33 @@ As we will see, this subset forms a group under quaternion multiplication and wi
   These transformations form a group
   \begin{itemize}
     \item Closure: Composition is quaternion multiplication $R_\mathbf{p} \circ R_\mathbf{q} = R_{\mathbf{p}\otimes\mathbf{q}}$
-  \item Identity: The identity quaternion forms the identity rotation $\vec{v} = R_\mathbf{1}(\vec{v})$
-  \item Inverse: The conjugate forms the inverse rotation $R_\mathbf{q} \circ R_{\mathbf{q}^*} = R_\mathbf{1}$
-  \item Existence: For any vectors with $Q(\vec{u})=Q(\vec{v})$ there is a rotation $\vec{u}=R_\mathbf{q}(\vec{v})$
-  \item Double Cover: Rotations are not unique $R_\mathbf{q}(\vec{v})=R_{-\mathbf{q}}(\vec{v})$
+    \item Identity: The identity quaternion forms the identity rotation $\vec{v} = R_\mathbf{1}(\vec{v})$
+    \item Inverse: The conjugate forms the inverse rotation $R_\mathbf{q} \circ R_{\mathbf{q}^*} = R_\mathbf{1}$
   \end{itemize}
 \end{theorem}
 
 \begin{theorem}
-  In addition, quaternion rotation behaves well with 3-vectors:
+  Quaternion rotation preserves the structure of $\mathbb{R}^3$
   \begin{itemize}
-    \item Orthogonality: $Q(R_\mathbf{q}(\vec{v}))=Q(\vec{v})$
-    \item Preserves the dot product: $\vec{u} \cdot \vec{v}=R_\mathbf{q}(\vec{u}) \cdot R_\mathbf{q}(\vec{v})$
-    \item Preserves the cross product: $R_\mathbf{q}\left(\vec{u}\times\vec{v}\right)=R_\mathbf{q}(\vec{u})\times R_\mathbf{q}(\vec{v})$.
+    \item Preserves Quadrance: $Q(R_\mathbf{q}(\vec{v}))=Q(\vec{v})$
+    \item Preserves the Dot Product: $\vec{u} \cdot \vec{v}=R_\mathbf{q}(\vec{u}) \cdot R_\mathbf{q}(\vec{v})$
+    \item Preserves the Cross Product: $R_\mathbf{q}\left(\vec{u}\times\vec{v}\right)=R_\mathbf{q}(\vec{u})\times R_\mathbf{q}(\vec{v})$.
   \end{itemize}
+\end{theorem}
+
+\begin{theorem}
+  Any vector can be rotated to any other vector of the same quadrance,
+  \begin{equation}
+    Q(\vec{u})=Q(\vec{v}) \Rightarrow \exists \mathbf{q}\in \mathrm{Spin}(3)\text{ such that }\vec{u}=R_\mathbf{q}(\vec{v}).
+  \end{equation}
+\end{theorem}
+
+\begin{theorem}
+  However, these rotations are not unique,
+  \begin{equation}
+    R_\mathbf{q} = R_{-\mathbf{q}}.
+  \end{equation}
+  Thus unit quaternions provide a double cover of the rotation group.
 \end{theorem}
 
 \begin{theorem}[Quaternion to Matrix]
@@ -542,7 +555,7 @@ As we will see, this subset forms a group under quaternion multiplication and wi
   \end{equation}
 \end{theorem}
 \begin{proof}
-  Expanding the rotation equation into their scalar and vector components
+  Expanding the rotation equation into its scalar and vector components
   \begin{equation}
     R_\mathbf{q}(\vec{v}) = \mathbf{q} \otimes (\vec{v}, 0) \otimes \mathbf{q}^* =
     \begin{pmatrix}
