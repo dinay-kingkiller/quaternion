@@ -3,6 +3,7 @@
 \DeclareMathOperator{\ad}{ad}
 
 \newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{lemma}[theorem]{Lemma}
 \theoremstyle{definition}
 \newtheorem{definition}[theorem]{Definition}
@@ -156,13 +157,13 @@ Scalar multiplication equips quaternions with the structure of a vector space ov
 \begin{theorem}[Canonical Embedding]
   The real numbers are embedded in the quaternions, with
   \begin{equation}
-    \mathbb{R} \cong \left{ s\mathrm{e}_1 \mid s\in \mathbb{R} \right} \subset \mathbb{H}.
+    \mathbb{R} \cong \left\{ s\mathrm{e}_1 \mid s\in \mathbb{R} \right\} \subset \mathbb{H}.
   \end{equation}
   and this subalgebra is isomorphic to $\mathbb{R}$.
 \end{theorem}
 
 \begin{remark}
-  With this theorem, and the above properties, we begin shedding the notation we've built up for simplicity. The algebra $(\mathbb{H}, \oplus, \otimes, \mathrm{e}_0, \mathrm{e}_1)$ will simply be known as $(\mathbb{H}, +, \cdot, 0, 1)$ with multiplication typically written $\mathbf{p}\mathbf{q}$ to avoid notation collisions with the dot product.
+  With this theorem, and the above properties, we begin shedding the notation we've built up for simplicity. The algebra $(\mathbb{H}, \oplus, \otimes, \mathrm{e}_0, \mathrm{e}_1)$ will simply be known as $(\mathbb{H}, +, \cdot, 0, 1)$ with multiplication typically written $\mathrm{p}\mathrm{q}$ to avoid notation collisions with the dot product.
 \end{remark}
 
 \begin{definition}
@@ -213,6 +214,61 @@ Scalar multiplication equips quaternions with the structure of a vector space ov
   Some papers use different definitions of unit bases, which would lead to a different equation \ref{eqn:multiplication}.
   The algebraic structure remains equivalent across differing conventions, but comparing sources can introduce sign errors or apparent changes in commutativity.
 \end{theorem}
+
+\section{Unit Quaternion Subgroup}
+The algebra of quaternions admits a natural notion of conjugation, which in turn defines a quadratic quantity known as the quadrance.
+Together, these structures endow $\mathbb{H}$ with the structure of a \emph{composition algebra}, in which the quadrance is multiplicative under quaternion multiplication.
+This multiplicative property allows us to identify a distinguished subset of quaternions whose quadrance is unity.
+As we will see, this subset forms a group under quaternion multiplication and will play a central role in describing rotations in three-dimensional space.
+
+\begin{definition}
+  For a quaternion $\mathrm{q}=(\mathbf{v}, s)$, its \emph{conjugate} is given by
+  \begin{equation}
+    \mathrm{q}^* := (-\mathbf{v}, s)
+  \end{equation}
+\end{definition}
+
+\begin{definition}
+  The \emph{quadrance} of a quaternion is the map
+  \begin{equation}
+    Q: \mathbb{H} \to \Re(\mathbb{H}) \cong \mathbb{R}
+  \end{equation}
+  defined by
+  \begin{equation}
+    Q(\mathrm{q}) := \mathrm{q} \otimes \mathrm{q}^*.
+  \end{equation}
+  Or, in coordinate form
+  \begin{equation}
+    Q(x\mathrm{i}+y\mathrm{j}+z\mathrm{k}+w) = x^2 + y^2 + z^2 + w^2.
+  \end{equation}
+\end{definition}
+
+\begin{theorem}
+  With these new definitions, the quaternion algebra $\mathbb{H}$ forms a composition algebra, which has the following properties:
+  \begin{itemize}
+    \item Conjugation Involution: $\left(\mathrm{q}^*\right)^* = \mathrm{q}$,
+    \item Conjugation Reverses Multiplication: $(\mathrm{p}\otimes\mathrm{q})^*=\mathrm{q}^*\otimes\mathrm{p}^*$,
+    \item Quadrance Nondegeneracy: $Q(\mathrm{q})=0 \Leftrightarrow \mathrm{q} = \mathrm{0}$,
+    \item Quadrance Compatibility with Multiplication: $Q(\mathrm{p})Q(\mathrm{q})=Q(\mathrm{p}\otimes \mathrm{q})$.
+  \end{itemize}
+\end{theorem}
+
+\begin{definition}
+  The \emph{unit quaternions}, or \emph{versors}, form the subgroup $\mathrm{Spin}(3) \subset (\mathbb{H}\setminus\{\mathrm{0}\}, \otimes)$, is the set of quaternions with quadrance equal to $1$.
+  \begin{equation}
+    \mathrm{Spin}(3) := \left\{\mathrm{q} \in \mathbb{H} : Q(\mathrm{q}) = 1\right\}
+  \end{equation}
+\end{definition}
+
+\begin{theorem}
+  This group has the following group properties
+  \begin{itemize}
+    \item Closure: If $Q(\mathrm{p})=1$ and $Q(\mathrm{q})=1$, then $Q(\mathrm{p}\otimes\mathrm{q})=1$.
+    \item Identity: The identity quaternion is a versor $\mathrm{1}\in\mathrm{Spin}(3)$.
+    \item Inverse: The inverse of a versor is the conjugate which is also a versor $\mathrm{q} \otimes \mathrm{q}^* = \mathrm{1}$.
+  \end{itemize}
+\end{theorem}
+
 
 \section{Pure Quaternions}
 In the previous section we said quaternions form a vector space, so technically every quaternion is a 4-vector.
@@ -274,13 +330,6 @@ In practice, quaternions are particularly useful because of how they interact wi
 \end{definition}
 
 \begin{theorem}
-  The scalar quaternions $\Re(\mathbb{H})$ are isomorphic to $\mathbb{R}$. They are defined with the relation with the conjugate
-  \begin{equation}
-    \mathbb{R} \cong \Re(\mathbb{H}) := \left\{\mathrm{q}=\mathrm{q}^*\right\}
-  \end{equation}
-\end{theorem}
-
-\begin{theorem}
   The pure quaternions $\Im(\mathbb{H})$ are isomorphic to $\mathbb{R}^3$. They are defined with the relation with the conjugate
   \begin{equation}
     \mathbb{R}^3 \cong \Im(\mathbb{H}) := \left\{\mathrm{q}+\mathrm{q}^*=0\right\}
@@ -330,22 +379,16 @@ In practice, quaternions are particularly useful because of how they interact wi
 \begin{proof}
   For $\mathrm{q}_1=(\mathbf{v}_1, s_1)$ and $\mathrm{q}_2=(\mathbf{v}_2, s_2)$, the commutator expands to
   \begin{equation}
+    \left[
     \begin{pmatrix}
       \mathbf{v}_1 \\
       s_1
-    \end{pmatrix} \otimes
+    \end{pmatrix} ,
     \begin{pmatrix}
       \mathbf{v}_2 \\
       s_2
-    \end{pmatrix} -
-    \begin{pmatrix}
-      \mathbf{v}_2 \\
-      s_2
-    \end{pmatrix} \otimes
-    \begin{pmatrix}
-      \mathbf{v}_1 \\
-      s_1
-    \end{pmatrix} =
+    \end{pmatrix}
+    \right] =
     \begin{pmatrix}
       s_1\mathbf{v}_2 + s_2\mathbf{v}_1 + \mathbf{v}_1 \times \mathbf{v}_2 \\
       s_1s_2 - \mathbf{v}_1 \cdot \mathbf{v}_2
@@ -357,22 +400,16 @@ In practice, quaternions are particularly useful because of how they interact wi
   \end{equation}
   Since only the cross product is \emph{not} commutative, the commutator reduces down to
   \begin{equation}
+    \left[
     \begin{pmatrix}
       \mathbf{v}_1 \\
       s_1
-    \end{pmatrix} \otimes
+    \end{pmatrix} ,
     \begin{pmatrix}
       \mathbf{v}_2 \\
       s_2
-    \end{pmatrix} -
-    \begin{pmatrix}
-      \mathbf{v}_2 \\
-      s_2
-    \end{pmatrix} \otimes
-    \begin{pmatrix}
-      \mathbf{v}_1 \\
-      s_1
-    \end{pmatrix} =
+    \end{pmatrix}
+    \right] =
     \begin{pmatrix}
       \mathbf{v}_1\times\mathbf{v}_2-\mathbf{v}_2\times\mathbf{v}_1 \\
       0
@@ -380,22 +417,16 @@ In practice, quaternions are particularly useful because of how they interact wi
   \end{equation}
   But, because the cross product is \emph{anti-}commutative
   \begin{equation}
+    \left[
     \begin{pmatrix}
       \mathbf{v}_1 \\
       s_1
-    \end{pmatrix} \otimes
+    \end{pmatrix} ,
     \begin{pmatrix}
       \mathbf{v}_2 \\
       s_2
-    \end{pmatrix} -
-    \begin{pmatrix}
-      \mathbf{v}_2 \\
-      s_2
-    \end{pmatrix} \otimes
-    \begin{pmatrix}
-      \mathbf{v}_1 \\
-      s_1
-    \end{pmatrix} =
+    \end{pmatrix}
+    \right] =
     \begin{pmatrix}
       2\mathbf{v}_1\times\mathbf{v}_2\\
       0
@@ -403,62 +434,119 @@ In practice, quaternions are particularly useful because of how they interact wi
   \end{equation}
 \end{proof}
 
-\section{Unit Quaternion Subgroup}
-The algebra of quaternions admits a natural notion of conjugation, which in turn defines a quadratic quantity known as the quadrance.
-Together, these structures endow $\mathbb{H}$ with the structure of a \emph{composition algebra}, in which the quadrance is multiplicative under quaternion multiplication.
-This multiplicative property allows us to identify a distinguished subset of quaternions whose quadrance is unity.
-As we will see, this subset forms a group under quaternion multiplication and will play a central role in describing rotations in three-dimensional space.
-
-\begin{definition}
-  For a quaternion $\mathrm{q}=(\mathbf{v}, s)$, its \emph{conjugate} is given by
+\begin{corollary}
+  From the previous result, scalar quaternions commute with all quaternions, and therefor form the center of $\mathbb{H}$
   \begin{equation}
-    \mathrm{q}^* := (-\mathbf{v}, s)
+    \Re(\mathbb{H}) = Z(\mathbb{H}) = \{\mathrm{a} \in \mathbb{H} \mid \mathrm{aq}=\mathrm{qa} \ \forall \mathrm{q} \in \mathbb{H}\}.
   \end{equation}
-\end{definition}
-
-\begin{definition}
-  The \emph{quadrance} of a quaternion is the map
-  \begin{equation}
-    Q: \mathbb{H} \to \Re(\mathbb{H}) \cong \mathbb{R}
-  \end{equation}
-  defined by
-  \begin{equation}
-    Q(\mathrm{q}) := \mathrm{q} \otimes \mathrm{q}^*.
-  \end{equation}
-  Or, in coordinate form
-  \begin{equation}
-    Q(x\mathrm{i}+y\mathrm{j}+z\mathrm{k}+w) = x^2 + y^2 + z^2 + w^2.
-  \end{equation}
-\end{definition}
+\end{corollary}
 
 \begin{theorem}
-  With these new definitions, the quaternion algebra $\mathbb{H}$ forms a composition algebra, which has the following properties:
-  \begin{itemize}
-    \item Conjugation Involution: $\left(\mathrm{q}^*\right)^* = \mathrm{q}$,
-    \item Conjugation Reverses Multiplication: $(\mathrm{p}\otimes\mathrm{q})^*=\mathrm{q}^*\otimes\mathrm{p}^*$,
-    \item Quadrance Nondegeneracy: $Q(\mathrm{q})=0 \Leftrightarrow \mathrm{q} = \mathrm{0}$,
-    \item Quadrance Compatibility with Multiplication: $Q(\mathrm{p})Q(\mathrm{q})=Q(\mathrm{p}\otimes \mathrm{q})$.
-  \end{itemize}
-\end{theorem}
-
-\begin{definition}
-  The \emph{unit quaternions}, or \emph{versors}, form the subgroup $\mathrm{Spin}(3) \subset (\mathbb{H}\setminus\{\mathrm{0}\}, \otimes)$, is the set of quaternions with quadrance equal to $1$.
+  The tangent algebra of the unit quaternion subgroup is the pure quaternions subalgebra:
   \begin{equation}
-    \mathrm{Spin}(3) := \left\{\mathrm{q} \in \mathbb{H} : Q(\mathrm{q}) = 1\right\}
+    \mathfrak{spin}(3) := \{\mathrm{\dot{q}}\in\mathbb{H}: \mathrm{\dot{q}}+\mathrm{\dot{q}}^* = 0\} = \Im(\mathbb{H})
   \end{equation}
-\end{definition}
+\end{theorem}
+\begin{proof}
+  Let $\mathrm{q}(t): \mathbb{R} \to \mathrm{Spin}(3)$ with $\mathrm{q}(0)=1$. Since $\mathrm{q}\in\mathrm{Spin}(3)$ is where the quadrance is equal to $1$.
+  \begin{equation}
+    \mathrm{q}\mathrm{q}^*=1 \nonumber
+  \end{equation}
+  The derivative w.r.t. $t$ is then
+  \begin{equation}
+    \mathrm{\dot{q}}\mathrm{q}^* + \mathrm{q}\mathrm{\dot{q}}^* = 0. \nonumber
+  \end{equation}
+  At $t=0$
+  \begin{equation}
+    \mathrm{\dot{q}} + \mathrm{\dot{q}}^* = 0 \nonumber
+  \end{equation}
+  Expanding to the scalar plus vector form
+  \begin{equation}
+    \begin{pmatrix}
+      \dot{\mathbf{q}} \\
+      \dot{q}_0
+    \end{pmatrix} +
+    \begin{pmatrix}
+      - \dot{\mathbf{q}} \\
+      \dot{q}_0
+    \end{pmatrix} = 0 \nonumber
+  \end{equation}
+  This is only true when $\dot{q}_0=0$, so $\dot{\mathrm{q}}$ is a pure quaternion belonging to $\mathrm{Im}(\mathbb{H})$.
+\end{proof}
+
+\begin{lemma}
+  For a pure quaternion $\mathbf{v} \in \Im(\mathbb{H})$
+  \begin{equation}
+    \mathbf{v}^2 = -Q(\mathbf{v})
+  \end{equation}
+\end{lemma}
+
+\begin{lemma}
+  For a pure, unit quaternion $\mathbf{\hat{v}}\in\Im(\mathbb{H})$, $Q(\mathbf{\hat{v}})=1$
+  \begin{equation}
+    \mathbb{R}[\mathbf{\hat{v}}] := \{a+b\mathbf{\hat{v}} \mid a,b \in\mathbb{R}\} \cong \mathbb{C},
+  \end{equation}
+  via the identification of $\hat{\mathbf{v}}$ with the imaginary unit $i$.
+\end{lemma}
 
 \begin{theorem}
-  This group has the following group properties
-  \begin{itemize}
-    \item Closure: If $Q(\mathrm{p})=1$ and $Q(\mathrm{q})=1$, then $Q(\mathrm{p}\otimes\mathrm{q})=1$.
-    \item Identity: The identity quaternion is a versor $\mathrm{1}\in\mathrm{Spin}(3)$.
-    \item Inverse: The inverse of a versor is the conjugate which is also a versor $\mathrm{q} \otimes \mathrm{q}^* = \mathrm{1}$.
-  \end{itemize}
+  The exponential map of a pure quaternion $\mathbf{v}\in\Im(\mathbb{H})$ is a combination of $\cos$ and $\sin$
+  \begin{equation}
+    \exp(\mathbf{v}) = \cos|\mathbf{v}| + \mathbf{\hat{v}} \sin|\mathbf{v}|,
+  \end{equation},
+  where $|\mathbf{v}|^2:=Q(\mathbf{v})$ is the length and $\mathbf{\hat{v}}:=\frac{\mathbf{v}}{|\mathbf{v}}$ a unit vector pointing in the direction of the vector part of the quaternion.
+  Except at $\mathbf{v}=\mathbf{0}$ where $\exp(\mathbf{0}) = 1$.
 \end{theorem}
+\begin{proof}
+  We start with the base case
+  \begin{equation}
+    \exp(\mathbf{0}) := \sum^\infty_{n=0} \frac{0^n}{n!}. \nonumber
+  \end{equation}
+  Since for any associative algebra, $\mathrm{q}^0:=1$, and for any ring $0^{n+1}=0^n0=0$
+  \begin{equation}
+    \exp(\mathbf{0}) = 1. \nonumber
+  \end{equation}
+  For the rest of the subalgebra
+  \begin{equation}
+    \exp(\mathbf{v}) := \sum^\infty_{n=0} \frac{\mathbf{v}^n}{n!}. \nonumber
+  \end{equation}
+  Since $|\mathbf{v}|\neq 0$, we can decompose the vector into its direction and magnitude $\mathbf{v}:=|\mathbf{v}|\mathbf{\hat{v}}$
+  \begin{align}
+    |\mathbf{v}|^2 &:= Q(\mathbf{v}) \nonumber\\
+    \mathbf{\hat{v}} &:= \frac{\mathbf{v}}{|\mathbf{v}|}. \nonumber
+  \end{align}
+  Separating into even and odd powers
+  \begin{equation}
+    \exp(\mathbf{v}) = \sum^\infty_{k=0} \frac{\mathbf{v}^{2k}}{(2k)!} + \sum^\infty_{k=0} \frac{\mathbf{v}^{2k+1}}{(2k+1)!} \nonumber
+  \end{equation}
+  becomes
+  \begin{equation}
+    \exp(\mathbf{v}) = \sum^\infty_{k=0} \frac{|\mathbf{v}|^{2k}\mathbf{\hat{v}}^{2k}}{(2k)!} + \sum^\infty_{k=0} \frac{|\mathbf{v}|^{2k+1}\mathbf{\hat{v}}^{2k+1}}{(2k+1)!} \nonumber
+  \end{equation}
+  For a unit vector
+  \begin{equation}
+    \mathbf{\hat{v}}^2 =
+    \begin{pmatrix}
+      \mathbf{\hat{v}} \times \mathbf{\hat{v}} = \mathbf{0}\\
+      -\mathbf{\hat{v}} \cdot \mathbf{\hat{v}}} = Q(\mathbf{\hat{v}})
+    \end{pmatrix}, \nonumber
+  \end{equation}
+  then $\mathbf{\hat{v}}^3=-\hat{v}$, $\mathbf{\hat{v}}^4=1$, and $\mathbf{\hat{v}}^5=\hat{v}$, which gives
+  \begin{align}
+    \mathbf{\hat{v}}^{2k} &= (-1)^k \nonumber\\
+    \mathbf{\hat{v}}^{2k+1} &= (-1)^k\mathbf{\hat{v}} \nonumber
+  \end{align}
+  and the series becomes
+  \begin{equation}
+    \exp(\mathbf{v}) = \sum^\infty_{k=0} \frac{(-1)^{k}|\mathbf{\hat{v}}|^{2k}}{(2k)!} + \mathbf{\hat{v}}\sum^\infty_{k=0} \frac{(-1)^k|\mathbf{v}|^{2k+1}}{(2k+1)!} \nonumber
+  \end{equation}
+  which is a combination of the definitions of $\cos$ and $\sin$
+  \begin{equation}
+    \exp(\mathbf{v}) = \cos|\mathbf{v}| + \mathbf{\hat{v}} \sin|\mathbf{v}|. \nonumber
+  \end{equation}
+\end{proof}
 
 \section{Quaternion Rotation Group}
-
 \begin{definition}
   Unit quaternions act on vectors by conjugation, producing rotations in three-dimensional space.
   These transformations form the rotation group.
@@ -639,42 +727,8 @@ As we will see, this subset forms a group under quaternion multiplication and wi
 \end{proof}
 
 \section{Quaternion Rotation Algebra}
-
 \begin{theorem}
-  The Lie algebra that corresponds the Spin group is the set of pure quaternions
-  \begin{equation}
-    \mathfrak{spin}(3) := \{\mathrm{\dot{q}}\in\mathbb{H}: \mathrm{\dot{q}}+\mathrm{\dot{q}}^* = 0\} = \mathrm{Im}(\mathbb{H})
-  \end{equation}
-\end{theorem}
-\begin{proof}
-  Let $\mathrm{q}(t): \mathbb{R} \to \mathrm{Spin}(3)$ with $\mathrm{q}(0)=1$. Since $\mathrm{q}\in\mathrm{Spin}(3)$ is where the quadrance is equal to $1$.
-  \begin{equation}
-    \mathrm{q}\mathrm{q}^*=1 \nonumber
-  \end{equation}
-  The derivative w.r.t. $t$ is then
-  \begin{equation}
-    \mathrm{\dot{q}}\mathrm{q}^* + \mathrm{q}\mathrm{\dot{q}}^* = 0. \nonumber
-  \end{equation}
-  At $t=0$
-  \begin{equation}
-    \mathrm{\dot{q}} + \mathrm{\dot{q}}^* = 0 \nonumber
-  \end{equation}
-  Expanding to the scalar plus vector form
-  \begin{equation}
-    \begin{pmatrix}
-      \dot{\mathbf{q}} \\
-      \dot{q}_0
-    \end{pmatrix} +
-    \begin{pmatrix}
-      - \dot{\mathbf{q}} \\
-      \dot{q}_0
-    \end{pmatrix} = 0 \nonumber
-  \end{equation}
-  This is only true when $\dot{q}_0=0$, so $\dot{q}$ is a pure quaternion belonging to $\mathrm{Im}(\mathbb{H})$.
-\end{proof}
-
-\begin{theorem}
-  The Lie algebra that corresponds to the Rotation group is a group of adjoint operators, such that
+  The tangent algebra that corresponds to the rotation group is a group of adjoint operators, such that
   \begin{equation}
     \mathfrak{rot}(3) := \left\{\ad_{\mathrm{\dot{q}}}: \mathbf{v} \to [\mathrm{\dot{q}}, (\mathbf{v}, 0)], \mathrm{\dot{q}}\in\mathfrak{spin}(3)\right\}.
   \end{equation}
